@@ -51,52 +51,53 @@ export function SiteHeader() {
           </div>
         </a>
 
-        {/* Desktop nav */}
-        <nav className="hidden items-center gap-1 md:flex">
+        {/* Desktop nav (lg 以上显示全部，md 显示精简) */}
+        <nav className="hidden items-center gap-0.5 lg:flex">
           {NAV.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-gold"
+              className="rounded-md px-2.5 py-1.5 text-[13px] font-medium text-muted-foreground transition-colors duration-100 hover:text-gold"
             >
               {item.label}
             </a>
           ))}
         </nav>
 
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-2">
           <a
             href="/login"
-            className="hidden items-center gap-1.5 rounded-md border border-gold/30 px-3 py-2 text-sm font-medium text-gold transition-all hover:border-gold/60 hover:bg-ink-3 sm:flex"
+            className="hidden items-center gap-1.5 rounded-md border border-gold/30 px-3 py-1.5 text-[13px] font-medium text-gold transition-colors duration-100 hover:border-gold/60 hover:bg-ink-3 sm:flex"
           >
             主理人登录
           </a>
           <a
             href="#join"
-            className="hidden items-center gap-2 rounded-md bg-gold px-4 py-2 text-sm font-bold text-ink transition-all hover:bg-gold-bright hover:gold-glow lg:flex"
+            className="hidden items-center gap-1.5 rounded-md bg-gold px-3.5 py-1.5 text-[13px] font-bold text-ink transition-colors duration-100 hover:bg-gold-bright lg:flex"
           >
             成为街头主理人
           </a>
+          {/* 移动端/平板汉堡按钮（lg 以下显示） */}
           <button
             onClick={() => setOpen((v) => !v)}
-            className="flex h-10 w-10 items-center justify-center rounded-md border border-gold/20 text-gold md:hidden"
+            className="flex h-9 w-9 items-center justify-center rounded-md border border-gold/20 text-gold lg:hidden"
             aria-label="菜单"
           >
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {open ? <X className="h-4.5 w-4.5" /> : <Menu className="h-4.5 w-4.5" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* 折叠菜单（移动端 + 平板 lg 以下） */}
       {open && (
-        <div className="border-t border-gold/15 bg-ink/95 backdrop-blur-xl md:hidden">
-          <nav className="mx-auto flex max-w-7xl flex-col px-4 py-3">
+        <div className="border-t border-gold/15 bg-ink/95 backdrop-blur-xl lg:hidden">
+          <nav className="mx-auto grid max-w-7xl grid-cols-2 gap-1 px-4 py-3 sm:grid-cols-3">
             {NAV.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-ink-3 hover:text-gold"
+                className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-ink-3 hover:text-gold"
               >
                 {item.label}
               </a>
@@ -104,14 +105,14 @@ export function SiteHeader() {
             <a
               href="/login"
               onClick={() => setOpen(false)}
-              className="mt-2 rounded-md border border-gold/30 px-4 py-3 text-center text-sm font-medium text-gold"
+              className="rounded-md border border-gold/30 px-3 py-2.5 text-center text-sm font-medium text-gold"
             >
               主理人登录
             </a>
             <a
               href="#join"
               onClick={() => setOpen(false)}
-              className="mt-2 rounded-md bg-gold px-4 py-3 text-center text-sm font-bold text-ink"
+              className="rounded-md bg-gold px-3 py-2.5 text-center text-sm font-bold text-ink"
             >
               成为街头主理人
             </a>

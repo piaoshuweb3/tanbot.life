@@ -18,8 +18,8 @@ function LiveTicker() {
     "飘叔公道 · 烤串毛肚 全国热销 NO.1",
   ];
   return (
-    <div className="relative overflow-hidden border-b border-gold/15 bg-ink-2/80 py-2">
-      <div className="flex w-max animate-ticker gap-10 whitespace-nowrap">
+    <div className="relative overflow-hidden border-b border-gold/15 bg-ink-2/80 py-3">
+      <div className="flex w-max animate-ticker gap-12 whitespace-nowrap">
         {[...items, ...items].map((t, i) => (
           <span key={i} className="flex items-center gap-2 text-xs text-muted-foreground">
             <span className="h-1.5 w-1.5 rounded-full bg-jade animate-pulse" />
@@ -74,9 +74,12 @@ export function HeroManifesto() {
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
 
       <div className="relative flex min-h-screen flex-col">
-        <LiveTicker />
+        {/* 滚动数据条（pt-16 为固定导航栏留位，mb-8 与下方内容拉开间距） */}
+        <div className="pt-16">
+          <LiveTicker />
+        </div>
 
-        <div className="flex flex-1 flex-col items-center justify-center px-4 py-20 text-center sm:px-6">
+        <div className="flex flex-1 flex-col items-center justify-center px-4 py-16 text-center sm:px-6">
           {/* 横批 · 品牌印章 */}
           <div className="reveal mb-7 flex items-center gap-3" data-delay="0">
             <span className="h-px w-8 bg-rice/40" />

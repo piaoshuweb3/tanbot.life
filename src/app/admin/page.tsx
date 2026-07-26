@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Flame, ArrowLeft, Loader2, Cpu, Plus, Check, X, Star, Settings,
@@ -32,6 +32,7 @@ export default function AdminPage() {
   const { toast } = useToast();
   const [models, setModels] = useState<AIModel[]>([]);
   const [loading, setLoading] = useState(true);
+  const redirectedRef = useRef(false);
   const [editing, setEditing] = useState<Record<string, { apiKey: string; apiEndpoint: string; priority: string }>>({});
   const [showAdd, setShowAdd] = useState(false);
   const [newModel, setNewModel] = useState({
@@ -40,9 +41,15 @@ export default function AdminPage() {
   });
 
   const load = async () => {
+    if (redirectedRef.current) return;
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/models");
+      const res = await fetch("/api/admin/models", { cache: "no-store", credentials: "same-origin" });
+      if (res.status === 403) {
+        redirectedRef.current = true;
+        setTimeout(() => window.location.replace("/login"), 100);
+        return;
+      }
       const json = await res.json();
       if (!json.ok) throw new Error(json.error);
       setModels(json.data);
@@ -53,11 +60,7 @@ export default function AdminPage() {
       });
       setEditing(edit);
     } catch (e) {
-      if (e instanceof Error && e.message.includes("无权限")) {
-        router.replace("/login");
-      } else {
-        toast({ title: "加载失败", description: e instanceof Error ? e.message : "", variant: "destructive" });
-      }
+      toast({ title: "加载失败", description: e instanceof Error ? e.message : "", variant: "destructive" });
     } finally {
       setLoading(false);
     }

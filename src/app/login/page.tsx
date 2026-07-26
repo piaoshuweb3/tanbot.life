@@ -48,9 +48,9 @@ export default function LoginPage() {
         title: "登录成功",
         description: `欢迎回来，${json.data.user.realName || json.data.user.username}`,
       });
-      // 硬跳转确保 cookie 生效后进入后台（比 router.replace 更可靠）
+      // 用 replace 跳转，避免后退键回到登录页形成循环
       setTimeout(() => {
-        window.location.href = "/dashboard";
+        window.location.replace("/dashboard");
       }, 400);
     } catch (e) {
       toast({
@@ -83,7 +83,7 @@ export default function LoginPage() {
       if (!json.ok) throw new Error(json.error || "注册失败");
       toast({ title: "注册成功", description: "已自动登录" });
       setTimeout(() => {
-        window.location.href = "/dashboard";
+        window.location.replace("/dashboard");
       }, 400);
     } catch (e) {
       toast({

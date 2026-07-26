@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Flame, LogOut, TrendingUp, ShieldCheck, Star, Activity,
@@ -60,14 +60,17 @@ export default function DashboardPage() {
   const { toast } = useToast();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const redirectedRef = useRef(false);
 
   useEffect(() => {
+    if (redirectedRef.current) return;
     let cancelled = false;
-    fetch("/api/dashboard")
+    fetch("/api/dashboard", { cache: "no-store", credentials: "same-origin" })
       .then(async (r) => {
-        if (!r.ok) {
-          throw new Error(r.status === 401 ? "未登录" : "请求失败");
+        if (r.status === 401) {
+          throw new Error("UNAUTHORIZED");
         }
+        if (!r.ok) throw new Error("请求失败");
         return r.json();
       })
       .then((json) => {
@@ -76,9 +79,13 @@ export default function DashboardPage() {
         setData(json.data);
       })
       .catch((err) => {
-        if (cancelled) return;
-        if (err.message === "未登录") {
-          router.replace("/login");
+        if (cancelled || redirectedRef.current) return;
+        if (err.message === "UNAUTHORIZED") {
+          redirectedRef.current = true;
+          // 用 replace 避免后退循环，加少量延迟让 cookie 稳定
+          setTimeout(() => {
+            window.location.replace("/login");
+          }, 100);
         }
       })
       .finally(() => {
@@ -87,7 +94,7 @@ export default function DashboardPage() {
     return () => {
       cancelled = true;
     };
-  }, [router]);
+  }, []);
 
   const logout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });

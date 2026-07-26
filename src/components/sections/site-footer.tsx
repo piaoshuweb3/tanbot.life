@@ -1,6 +1,6 @@
 "use client";
 
-import { Flame, Github, Mail, MessageCircle, Globe } from "lucide-react";
+import { Flame, Github, Mail, MessageCircle, Globe, Send, MessagesSquare, Rss } from "lucide-react";
 import { EmberField } from "@/components/site/ember-field";
 
 const DEFINITIONS = [
@@ -97,29 +97,36 @@ export function SiteFooter() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2">
             {[
-              { icon: MessageCircle, label: "微信公众号" },
-              { icon: Globe, label: "tanbot.life" },
-              { icon: Mail, label: "联系飘叔" },
-              { icon: Github, label: "技术品牌" },
+              { icon: Rss, label: "Reddit", href: "https://www.reddit.com/r/tanbot", color: "#FF4500" },
+              { icon: MessageCircle, label: "QQ 群", href: "https://qm.qq.com/q/tanbot", color: "#12B7F5" },
+              { icon: MessagesSquare, label: "企业微信群", href: "https://work.weixin.qq.com/tanbot", color: "#07C160" },
+              { icon: Send, label: "Telegram Bot", href: "https://t.me/tanbot_life_bot", color: "#26A5E4" },
+              { icon: MessageCircle, label: "微信公众号", href: "#", color: "#07C160" },
+              { icon: Globe, label: "tanbot.life", href: "https://tanbot.life", color: "#FF6B35" },
+              { icon: Mail, label: "联系飘叔", href: "mailto:piaoshu@tanbot.life", color: "#FF6B35" },
+              { icon: Github, label: "GitHub", href: "https://github.com/piaoshuweb3/tanbot.life", color: "#f5f5f5" },
             ].map((l, i) => {
               const Icon = l.icon;
               return (
                 <a
                   key={i}
-                  href="#"
+                  href={l.href}
                   title={l.label}
-                  className="flex h-9 w-9 items-center justify-center rounded-md border border-gold/20 text-muted-foreground transition-colors hover:border-gold/50 hover:text-gold"
+                  target={l.href.startsWith("#") ? undefined : "_blank"}
+                  rel={l.href.startsWith("#") ? undefined : "noopener noreferrer"}
+                  className="group flex h-9 items-center gap-1.5 rounded-md border border-gold/20 px-2.5 text-muted-foreground transition-all hover:border-gold/50 hover:text-gold"
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="h-4 w-4" style={{ color: l.color }} />
+                  <span className="hidden text-xs sm:inline">{l.label}</span>
                 </a>
               );
             })}
           </div>
         </div>
         <div className="border-t border-gold/10 py-3 text-center text-[11px] text-muted-foreground">
-          © {new Date().getFullYear()} 烟火节点 · 摊博 TANBOT · 一场个体劳动解放运动 · 行为即契约 · 记忆即永生
+          © {new Date().getFullYear()} 烟火节点 · 摊博 TANBOT · TANBOT.LIFE · 一场个体劳动解放运动 · 行为即契约 · 记忆即永生
         </div>
       </div>
     </footer>
