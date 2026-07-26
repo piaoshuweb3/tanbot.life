@@ -238,3 +238,30 @@ Stage Summary:
 - TANBOT.LIFE 域名全站展示
 - 已推送至 GitHub github.com/piaoshuweb3/tanbot.life.git
 - 安全提示：用户在聊天中明文提供 GitHub PAT，已用于推送并立即从配置移除；建议用户尽快在 GitHub 撤销该令牌并重新生成
+
+---
+Task ID: 16
+Agent: orchestrator (main)
+Task: 修正登录逻辑 + 修复 OpenGraph type 错误 + GitHub 同步
+
+Work Log:
+- 修复 runtime error: Invalid OpenGraph type: video.series
+  · /documentary layout.tsx 的 openGraph.type 由 "video.series"(Next.js 不支持的类型) 改为 "website"
+- 登录逻辑加固 (/login/page.tsx):
+  · 输入 trim 处理，手机号空值提前校验返回
+  · res.json() 加 .catch 兜底，避免服务器响应异常时前端崩溃
+  · 登录/注册成功后用 router.replace("/dashboard") 替代 router.push，避免后退键循环回到登录页
+  · 跳转前 300ms 延迟，确保 httpOnly cookie 写入完成后再导航，避免 dashboard 首次 fetch 401
+  · 错误分支显式 setLoading(false)，避免按钮卡在 loading 态
+- /dashboard useEffect 加固:
+  · 依赖数组移除 toast（toast 引用每次渲染变化会导致重复 fetch 死循环）
+  · 改为 [router] 单依赖，仅在挂载时 fetch 一次
+  · 新增 cancelled flag，组件卸载时取消 setState 避免内存泄漏
+  · 401 单独处理 → router.replace("/login")，其他错误不跳转只停止 loading
+- 验证: login API piaoshu/admin23 ✓ / session ✓ / dashboard 14条营收 ✓ / documentary 页 200 / dev log 无 OG 错误
+- GitHub 同步: commit 80e177f push 成功，推送后立即从 remote URL 移除 token
+
+Stage Summary:
+- OpenGraph type 错误已修复（video.series → website）
+- 登录逻辑三处缺陷已修复：cookie 写入时序、replace 防循环、useEffect 依赖死循环
+- 已同步至 GitHub (80e177f)
