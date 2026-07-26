@@ -501,3 +501,33 @@ Vercel 部署状态:
 - 用户需在 Vercel Settings → Environment Variables 添加：
   DATABASE_URL = libsql://tanbot-piaoshu1112.aws-ap-northeast-1.turso.io?authToken=eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3ODUwNTkyMDMsImlkIjoiMDE5ZjlkZDEtN2EwMS03MGI3LTlmY2EtNzY0MjgxODM3MDQ1Iiwia2lkIjoiOW1PaXVkZTFiX1ZOTTF5b0wwczZDWTFrZUdqYlNLX2RKbGRiMGszREFQNCIsInJpZCI6ImVmY2EzOTQwLWE3YzktNGY1NC1hYWQ1LTNjYWMwYWM5NzdkOCJ9.Iwf2OGKW3Shgra3RPhL4kYHaLeo3NA06Eio0KyuVRGilCajxdRgiDyRBTVH4UDa1SoM9OGtUTzfH3s_1wUUiDA
 - 添加后 Redeploy，再访问 /api/setup 初始化，即可用 piaoshu/admin23 登录
+
+---
+Task ID: 23
+Agent: orchestrator (main)
+Task: 修复 Vercel 构建失败（ConnectionFailed: ./db/custom.db）
+
+根因（截图分析）:
+- Vercel 构建日志：Error: ConnectionFailed("Unable to open connection to local database ./db/custom.db: 14")
+- 发生在 "Collecting page data" 阶段，评估 /api/admin/models 时触发数据库连接
+- Vercel 构建环境无 ./db/custom.db 文件 → 连接失败 → Build error → 部署失败
+- 失败后 Vercel 保留旧部署（/chat 返回 404）
+
+修复:
+1. src/lib/db.ts：rawDb 改为 Proxy 懒加载
+   - 首次查询时才创建真实连接，构建时 import 不会触发连接
+2. 12 个 API 路由全部添加 export const dynamic = "force-dynamic"
+   - 阻止 Next.js 构建时预渲染/收集 API 路由数据
+
+验证:
+- 本地：login ✓ / setup ✓ / 4 路由全 200 / lint 0 error
+- Vercel：/chat 从 404 → 200（新代码部署成功！）
+- /api/setup 仍 500：因 Vercel 项目未配置 DATABASE_URL 环境变量，默认回退 file:./db/custom.db
+
+Vercel 最后一步（用户操作）:
+- Turso 数据库已就绪（piaoshu 账号已存在，已验证）
+- 需在 Vercel Settings → Environment Variables 添加：
+  DATABASE_URL = libsql://tanbot-piaoshu1112.aws-ap-northeast-1.turso.io?authToken=eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3ODUwNTkyMDMsImlkIjoiMDE5ZjlkZDEtN2EwMS03MGI3LTlmY2EtNzY0MjgxODM3MDQ1Iiwia2lkIjoiOW1PaXVkZTFiX1ZOTTF5b0wwczZDWTFrZUdqYlNLX2RKbGRiMGszREFQNCIsInJpZCI6ImVmY2EzOTQwLWE3YzktNGY1NC1hYWQ1LTNjYWMwYWM5NzdkOCJ9.Iwf2OGKW3Shgra3RPhL4kYHaLeo3NA06Eio0KyuVRGilCajxdRgiDyRBTVH4UDa1SoM9OGtUTzfH3s_1wUUiDA
+- Redeploy → 访问 /api/setup 初始化 → piaoshu/admin23 登录
+
+GitHub: commit cc2bfbd push 成功
