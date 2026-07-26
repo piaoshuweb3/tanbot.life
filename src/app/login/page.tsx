@@ -145,7 +145,7 @@ export default function LoginPage() {
             <div className="space-y-4">
               <div>
                 <label className="mb-1.5 block text-xs text-muted-foreground">用户名</label>
-                <div className="relative">
+                <div className="relative" suppressHydrationWarning>
                   <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gold/60" />
                   <Input
                     value={form.username}
@@ -157,7 +157,7 @@ export default function LoginPage() {
               </div>
               <div>
                 <label className="mb-1.5 block text-xs text-muted-foreground">密码</label>
-                <div className="relative">
+                <div className="relative" suppressHydrationWarning>
                   <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gold/60" />
                   <Input
                     type="password"
@@ -183,7 +183,7 @@ export default function LoginPage() {
             <div className="space-y-4">
               <div>
                 <label className="mb-1.5 block text-xs text-muted-foreground">手机号</label>
-                <div className="relative">
+                <div className="relative" suppressHydrationWarning>
                   <Phone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gold/60" />
                   <Input
                     value={form.phone}
