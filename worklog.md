@@ -321,3 +321,31 @@ Stage Summary:
 - 总管理后台上线：9 种 AI 模型配置（含 DeepSeek/GPT-5.5/通义千问 + 5 种免费）
 - Key ring 错误已确认为浏览器扩展误报
 - 已同步至 GitHub (4299fb1)
+
+---
+Task ID: 18
+Agent: orchestrator (main)
+Task: 修复主理人无法登录 + LastPass 扩展 hydration 错误
+
+Work Log:
+根因诊断:
+- 登录返回 "账号不存在"(HTTP 404)，非路由 404
+- 检查数据库：piaoshu 账号 MISSING
+- 根因：之前为新增 AIModel 模型运行 bun run db:push --accept-data-loss，该命令清空了所有数据
+- hydration 错误：LastPass 扩展注入 data-lastpass-icon-root 到输入框，SSR/CSR 不一致
+
+修复:
+- 重新执行 seed 恢复：piaoshu/admin23 + 14天营收 + 3条巡店 + 2集纪录片 + 9个AI模型
+- 登录页 src/app/login/page.tsx：用户名/密码/手机号输入框的 relative 容器添加 suppressHydrationWarning，抑制浏览器扩展注入的 DOM 差异
+
+验证:
+- login POST 200 ✓ (piaoshu)
+- session ✓ / dashboard 14条营收 ✓
+- lint 0 error
+
+GitHub 同步:
+- commit bd5831d push 成功，推送后从 remote URL 移除 token
+
+经验:
+- db:push --accept-data-loss 会清空数据，schema 变更后需重新 seed
+- 浏览器扩展(LastPass/密码管理器)会注入 DOM 触发 hydration mismatch，输入框容器加 suppressHydrationWarning 可解决
