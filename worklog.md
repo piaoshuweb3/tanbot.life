@@ -265,3 +265,59 @@ Stage Summary:
 - OpenGraph type 错误已修复（video.series → website）
 - 登录逻辑三处缺陷已修复：cookie 写入时序、replace 防循环、useEffect 依赖死循环
 - 已同步至 GitHub (80e177f)
+
+---
+Task ID: 17
+Agent: orchestrator (main)
+Task: 修复登录跳转 + 总管理后台(AI模型配置9种) + Key ring 错误说明 + GitHub同步
+
+Work Log:
+问题诊断:
+- "Key ring is empty" 错误来自 Chrome 扩展 hhejbopdnpbjgomhpmegemnjogflenga 的 injectedScript，非应用问题（z-ai SDK 凭证由机器 keyring 解析，inspect API 正常工作）
+- 登录后不跳转后台：router.replace 在某些场景下不可靠（cookie 未及时生效）
+
+登录跳转修复:
+- /login 登录成功后由 router.replace 改为 window.location.href 硬跳转(更可靠)
+- 延迟 400ms 确保 httpOnly cookie 写入完成
+- 注册成功同样改为 window.location.href
+
+总管理后台 /admin:
+- Prisma 新增 AIModel 模型(key/name/provider/category/apiEndpoint/apiKey/enabled/isDefault/priority/description)
+- seed 初始化 9 种预置模型：
+  1. Z.ai GLM (免费, 默认, 已启用, VLM 巡店与选址)
+  2. DeepSeek (付费, 选址分析首选)
+  3. 通义千问 (付费, 视觉巡店)
+  4. 智谱 GLM-4 (免费, 日常问答)
+  5. GPT-5.5 (付费, 海外备用)
+  6. 文心一言 (付费, 经营参谋)
+  7. 讯飞星火 (免费, 语音)
+  8. 百川大模型 (免费, 中文创作)
+  9. Kimi (免费, 长文本)
+- /api/admin/models GET(列表)/PUT(更新:启用/默认/密钥/优先级)/POST(新增)，均需管理员权限
+- /admin 页面：模型卡片列表 + 启用/默认开关 + API地址/Key/优先级配置 + 添加自定义模型 + 统计(总数/已启用/免费数) + 当前默认模型提示
+- /dashboard 快捷入口新增「总管理后台」链接(仅 user.role===admin 可见)
+- 密钥脱敏：仅返回末4位，输入新值才替换
+
+重启 dev server:
+- 修改 schema 后需重启 dev server 才能加载新 Prisma Client（db.aIModel 之前 undefined）
+- 用 start-stop-daemon 重启，admin API 200 返回 9 个模型
+
+验证:
+- 6 路由全 200(/ /login /dashboard /admin /inspect /documentary)
+- 登录→dashboard→admin 链路畅通
+- admin API 9 模型列表正确，权限校验(未登录 403)
+- lint 0 error
+
+GitHub 同步:
+- commit 4299fb1 push 成功，推送后从 remote URL 移除 token
+
+AI 系统模块可见性说明:
+- 首页 AI 系统区块（5 个 AI 智能体介绍 + 数字清明上河控制台 + 实时大屏 + 选址罗盘 Demo + AI 巡店入口）无需登录即可浏览
+- AI 巡店官在线体验(/inspect)无需登录即可使用
+- 主理人后台(/dashboard)与总管理后台(/admin)需登录，分别面向主理人与管理员
+
+Stage Summary:
+- 登录跳转已修复（window.location.href 硬跳转 + 400ms 延迟）
+- 总管理后台上线：9 种 AI 模型配置（含 DeepSeek/GPT-5.5/通义千问 + 5 种免费）
+- Key ring 错误已确认为浏览器扩展误报
+- 已同步至 GitHub (4299fb1)
