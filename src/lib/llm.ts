@@ -1,10 +1,11 @@
 /**
  * LLM 引擎 —— 使用 DeepSeek API（OpenAI 兼容接口）
- * 用户提供的 key: sk-d25706cb871f46f289deed77c90fd048
- * 通过环境变量 DEEPSEEK_API_KEY 覆盖（Vercel 部署用）。
+ * API Key 通过环境变量读取，不在代码中硬编码。
+ * 本地开发在 .env 中设置 DEEPSEEK_API_KEY / OPENAI_API_KEY
+ * Vercel 部署在 Project Settings > Environment Variables 中配置
  */
 
-const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY || process.env.OPENAI_API_KEY || "sk-d25706cb871f46f289deed77c90fd048";
+const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY || process.env.OPENAI_API_KEY || "";
 const DEEPSEEK_BASE = process.env.LLM_BASE_URL || "https://api.deepseek.com/v1";
 const DEEPSEEK_MODEL = process.env.LLM_MODEL || "deepseek-chat";
 

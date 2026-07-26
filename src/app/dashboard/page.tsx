@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import {
   Flame, LogOut, TrendingUp, ShieldCheck, Star, Activity,
   Loader2, Users, Coins, BarChart3, ScanLine, ArrowLeft,
+  UtensilsCrossed,
 } from "lucide-react";
 import { SiteHeader } from "@/components/site/site-header";
 import { Button } from "@/components/ui/button";
@@ -337,6 +338,12 @@ export default function DashboardPage() {
                       <ScanLine className="h-4 w-4 text-gold" /> AI 巡店官
                     </span>
                     <span className="text-gold">→</span>
+                  </a>
+                  <a href="/packages" className="flex items-center justify-between rounded-lg border border-ember/25 bg-ember/5 p-3 transition-colors hover:border-ember/50">
+                    <span className="flex items-center gap-2 text-sm text-text-soft">
+                      <UtensilsCrossed className="h-4 w-4 text-ember" /> AI 套餐工坊
+                    </span>
+                    <span className="text-ember">→</span>
                   </a>
                   <a href="/chat" className="flex items-center justify-between rounded-lg border border-gold/15 bg-ink-2/40 p-3 transition-colors hover:border-gold/40">
                     <span className="flex items-center gap-2 text-sm text-text-soft">
