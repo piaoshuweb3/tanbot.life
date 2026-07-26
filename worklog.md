@@ -349,3 +349,45 @@ GitHub 同步:
 经验:
 - db:push --accept-data-loss 会清空数据，schema 变更后需重新 seed
 - 浏览器扩展(LastPass/密码管理器)会注入 DOM 触发 hydration mismatch，输入框容器加 suppressHydrationWarning 可解决
+
+---
+Task ID: 19
+Agent: orchestrator (main)
+Task: 修复登录重定向循环 + 多设备响应式 + 底部社交链接 + 导航间距优化
+
+Work Log:
+1. 修复"重定向次数过多"(ERR_TOO_MANY_REDIRECTS):
+   - 根因：dashboard/admin 未登录时 useEffect fetch 401/403 → router.replace(/login)，cookie 在网关代理下尚未稳定时反复触发
+   - 修复：useRef(redirectedRef) 确保只重定向一次 + window.location.replace 替代 router.replace（无历史记录项避免后退循环）
+   - fetch 加 { cache: "no-store", credentials: "same-origin" } 确保每次发请求带 cookie
+   - 登录成功用 window.location.replace("/dashboard") 替代 href
+
+2. 多设备响应式 + 导航切换迅速:
+   - 桌面导航 lg(1024px)+ 显示全部 8 项，md/sm 用折叠菜单(grid 2-3 列)
+   - 字号收紧 13px、padding 压缩、transition duration-100（切换更迅速）
+   - 平板不再挤全部项，改汉堡按钮
+
+3. hero 顶部间距:
+   - 滚动字幕容器加 pt-16（为 64px 固定导航栏留位）
+   - 字幕 py-3 + gap-12（更宽松美感，与主内容有呼吸空间）
+   - 主内容 py-16
+
+4. 底部社交链接（页脚）:
+   - Reddit (reddit.com/r/tanbot) #FF4500
+   - QQ 群 (qm.qq.com) #12B7F5
+   - 企业微信群 (work.weixin.qq.com) #07C160
+   - Telegram Bot (t.me/tanbot_life_bot) #26A5E4
+   - 微信公众号 / tanbot.life / 联系飘叔 / GitHub
+   - 品牌色图标 + target=_blank + noopener
+
+5. 二级页面跳转逻辑清晰:
+   - /dashboard /admin /login /inspect /documentary 顶部统一「← 返回」面包条
+   - 受保护页面未登录统一 window.location.replace 到 /login，不会循环
+
+验证:
+- 6 路由全 200(/ /login /dashboard /admin /inspect /documentary)
+- login→dashboard→admin cookie 链路全通
+- 页脚 Reddit/QQ/企业微信/TG/微信/域名/邮件/GitHub 链接齐全
+- lint 0 error
+
+GitHub 同步: commit 233bd64 push 成功，推送后从 remote URL 移除 token
