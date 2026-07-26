@@ -470,3 +470,34 @@ Vercel 部署需用户完成的 3 步（代码已就绪）:
 3. Redeploy 后访问 /api/setup 初始化，即可用 piaoshu/admin23 登录
 
 GitHub 同步: commit bd2ba8e push 成功，token 已从 remote 移除
+
+---
+Task ID: 22
+Agent: orchestrator (main)
+Task: Vercel Turso 数据库 100%可用 + 补全3个AI功能
+
+数据库修复（Vercel 登录失败根因）:
+- 诊断：Prisma sqlite provider 无法连接 Turso libsql://（driverAdapters 仍报 URL_INVALID）
+- 方案：弃用 Prisma ORM，重构为 @libsql/client 直连
+  · src/lib/db.ts：rawDb 客户端（自动识别 libsql:// 远程 / file: 本地）
+  · src/lib/queries.ts：类型化查询层（managerDb/sessionDb/revenueDb/inspectionDb/documentaryDb/aiModelDb）
+  · ensureSchema() 自动建表
+- 所有 API 路由迁移到 queries 层（login/session/logout/dashboard/admin/documentary/setup）
+- 验证 Turso：login ✓ / dashboard ✓ / admin ✓ / documentary ✓ 全通
+- 验证本地：login ✓ / setup ✓ 全通
+
+补全3个AI功能（真实 LLM，非展示）:
+1. AI 经营参谋 /api/briefing：近14天营收+巡店数据 → LLM 生成每日简报（总评/亮点/待改进/明日建议/飘叔寄语）→ dashboard 新增简报卡片
+2. AI 智能客服 /api/chat + /chat 页：品牌知识库问答，7×24在线，dashboard 快捷入口
+3. AI 套餐工坊 /api/packages/recommend：天气/时段/销量 → LLM 推荐主推套餐+备货建议
+- LLM 引擎：src/lib/llm.ts（z-ai-web-dev-sdk）
+
+验证: 3 AI API 全通 / 6 路由全 200 / Turso 全通 / lint 0 error
+GitHub: commit 7edafc2 push 成功
+
+Vercel 部署状态:
+- /chat 与 /api/chat 在 Vercel 返回 404，说明新代码尚未部署成功
+- 根因：Vercel 构建可能因 DATABASE_URL 未设置而失败，保留了旧部署
+- 用户需在 Vercel Settings → Environment Variables 添加：
+  DATABASE_URL = libsql://tanbot-piaoshu1112.aws-ap-northeast-1.turso.io?authToken=eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3ODUwNTkyMDMsImlkIjoiMDE5ZjlkZDEtN2EwMS03MGI3LTlmY2EtNzY0MjgxODM3MDQ1Iiwia2lkIjoiOW1PaXVkZTFiX1ZOTTF5b0wwczZDWTFrZUdqYlNLX2RKbGRiMGszREFQNCIsInJpZCI6ImVmY2EzOTQwLWE3YzktNGY1NC1hYWQ1LTNjYWMwYWM5NzdkOCJ9.Iwf2OGKW3Shgra3RPhL4kYHaLeo3NA06Eio0KyuVRGilCajxdRgiDyRBTVH4UDa1SoM9OGtUTzfH3s_1wUUiDA
+- 添加后 Redeploy，再访问 /api/setup 初始化，即可用 piaoshu/admin23 登录
