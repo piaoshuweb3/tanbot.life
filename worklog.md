@@ -391,3 +391,43 @@ Work Log:
 - lint 0 error
 
 GitHub 同步: commit 233bd64 push 成功，推送后从 remote URL 移除 token
+
+---
+Task ID: 20
+Agent: orchestrator (main)
+Task: 登录100%可用 —— 彻底修复跨域鉴权失败
+
+根因诊断:
+- 后端 login/session/dashboard/admin API 本身正常（curl cookie 测试全通）
+- 但 preview 环境 preview-chat-xxx.space-z.ai 经网关代理，cookie(SameSite=lax + HttpOnly)跨域丢失
+- 导致登录后 dashboard fetch 401 → 重定向循环 → "登录失败/重定向次数过多"
+
+彻底修复方案 —— 双通道鉴权（cookie + Authorization header）:
+1. 后端 src/lib/session.ts getCurrentUser 同时支持:
+   - Authorization: Bearer <token> header（跨域友好，优先）
+   - cookie tanbot_session（同域兜底）
+2. 登录/注册 API response body 返回 token（除 Set-Cookie 外）
+3. 新增 src/lib/auth-client.ts:
+   - getToken/setToken/clearToken (localStorage)
+   - authFetch 自动附加 Authorization header + credentials:same-origin + cache:no-store
+4. /login 登录成功后 setToken(json.data.token) 存 localStorage
+5. /dashboard /admin:
+   - 用 authFetch 发请求（带 Authorization header）
+   - 客户端预检 getToken()，无 token 直接 window.location.replace('/login')，不等待网络
+   - 401/403 时 clearToken + replace 到 /login
+6. /api/auth/logout 同时从 header 与 cookie 读 token 删除会话
+7. logout 清除 localStorage token
+
+验证（全用 Authorization header，模拟跨域环境）:
+- login → 返回 token ✓
+- dashboard + Authorization header → 200 + 14条营收 ✓
+- session + header → logged in piaoshu ✓
+- admin models + header → 200 + 9 models ✓
+- dashboard 无 token → 401 ✓
+- 6 路由全 200 / lint 0 error / dev log 无报错
+
+GitHub 同步: commit 33cd40e push 成功，推送后从 remote URL 移除 token
+
+关键结论:
+- cookie 在跨域/网关代理环境不可靠，必须配合 Authorization header + localStorage 才能保证 100% 可用
+- 客户端预检 token（不发请求直接跳转）可避免无效网络往返与重定向循环
