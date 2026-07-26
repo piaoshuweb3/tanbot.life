@@ -123,3 +123,20 @@ Stage Summary:
 - 关键经验：此 sandbox 中，后台长驻进程必须用 start-stop-daemon --background 启动，nohup/setsid/disown 无效
 - agent-browser(Chrome) 与 dev server 同时运行会接近 4GB cgroup 上限，验证时需注意内存
 - lint 0 error，dev server 稳定运行，所有功能端到端验证通过
+
+---
+Task ID: 13
+Agent: orchestrator (main)
+Task: 「关于我」从首页移至二级页面 /about
+
+Work Log:
+- page.tsx：移除 AboutMeSection import 及渲染，首页恢复精简(序章→品牌灵魂→时代→AI→套餐→品牌资产→文案金句→品牌矩阵→招募)
+- 新建 src/app/about/page.tsx 二级页面：复用 SiteHeader + SiteFooter + AboutMeSection，顶部加「返回首页」面包条(/about 路径标识)
+- site-header.tsx：导航「关于我」由锚点 #about 改为路由 /about(external:true)
+- brand-soul-section.tsx：底部新增「阅读完整宣言」入口卡片(BookOpen 图标 + 飘叔三十年文案 + → 箭头)，链接到 /about，让用户不经导航也能发现二级页
+- 验证：home 200(无 #about 区块, 有 bridge card, 188KB 比之前减 80KB)、/about 200(完整宣言: 序章/第一-五章/终章/附录/品牌矩阵/摊博TANBOT/街头主理人/对联 + 返回首页链接)、lint 0 error、dev log 无报错
+
+Stage Summary:
+- 首页不再臃肿，「关于我」完整宣言移至 /about 二级阅读页
+- 首页与二级页双向可达：导航栏 + 品牌灵魂区块入口卡片 → /about；/about 顶部「返回首页」→ /
+- lint 0 error，两个路由均 200，所有内容验证通过

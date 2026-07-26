@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { Menu, X, Flame } from "lucide-react";
 
 const NAV = [
-  { href: "#soul", label: "品牌灵魂" },
-  { href: "#about", label: "关于我" },
-  { href: "#era", label: "时代" },
-  { href: "#ai", label: "AI 系统" },
-  { href: "#packages", label: "套餐" },
-  { href: "#asset", label: "品牌资产" },
-  { href: "#join", label: "加入" },
+  { href: "#soul", label: "品牌灵魂", external: false },
+  { href: "/about", label: "关于我", external: true },
+  { href: "#era", label: "时代", external: false },
+  { href: "#ai", label: "AI 系统", external: false },
+  { href: "#packages", label: "套餐", external: false },
+  { href: "#asset", label: "品牌资产", external: false },
+  { href: "#join", label: "加入", external: false },
 ];
 
 export function SiteHeader() {

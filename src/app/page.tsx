@@ -5,7 +5,6 @@ import { SiteHeader } from "@/components/site/site-header";
 import { HeroManifesto } from "@/components/sections/hero-manifesto";
 import { ManifestoSection } from "@/components/sections/manifesto-section";
 import { BrandSoulSection } from "@/components/sections/brand-soul-section";
-import { AboutMeSection } from "@/components/sections/about-me-section";
 import { EraSection } from "@/components/sections/era-section";
 import { AISystemSection } from "@/components/sections/ai-system-section";
 import { PackageSection } from "@/components/sections/package-section";
@@ -25,7 +24,6 @@ export default function Home() {
         <HeroManifesto />
         <ManifestoSection />
         <BrandSoulSection />
-        <AboutMeSection />
         <EraSection />
         <AISystemSection />
         <PackageSection />

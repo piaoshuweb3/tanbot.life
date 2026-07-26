@@ -1,6 +1,6 @@
 "use client";
 
-import { ScrollText } from "lucide-react";
+import { ScrollText, BookOpen } from "lucide-react";
 
 const GLOSSARY = [
   {
@@ -142,6 +142,32 @@ export function BrandSoulSection() {
               <span className="text-gold">炭火不灭，凡心不冷，公道自在。</span>
             </p>
           </div>
+        </div>
+
+        {/* 阅读完整宣言 · 入口卡片 */}
+        <div className="reveal mx-auto mt-12 max-w-3xl">
+          <a
+            href="/about"
+            className="group relative flex items-center justify-between overflow-hidden rounded-xl border border-gold/30 bg-gradient-to-r from-ink-2 to-ink p-6 transition-all hover:border-gold/60 hover:gold-glow"
+          >
+            <div className="absolute -left-10 -top-10 h-28 w-28 rounded-full bg-gold/8 blur-2xl transition-all group-hover:bg-gold/18" />
+            <div className="relative flex items-center gap-5">
+              <span className="flex h-12 w-12 items-center justify-center rounded-lg border border-gold/40 bg-gold/10 text-gold">
+                <BookOpen className="h-6 w-6" />
+              </span>
+              <div>
+                <div className="font-display text-lg font-bold text-rice">
+                  阅读完整宣言
+                </div>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  飘叔三十年 · 一场关于尊严、生存与个体解放的独白全文
+                </p>
+              </div>
+            </div>
+            <span className="relative font-display text-2xl text-gold transition-transform group-hover:translate-x-1">
+              →
+            </span>
+          </a>
         </div>
       </div>
     </section>
