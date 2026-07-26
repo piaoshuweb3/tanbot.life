@@ -431,3 +431,42 @@ GitHub 同步: commit 33cd40e push 成功，推送后从 remote URL 移除 token
 关键结论:
 - cookie 在跨域/网关代理环境不可靠，必须配合 Authorization header + localStorage 才能保证 100% 可用
 - 客户端预检 token（不发请求直接跳转）可避免无效网络往返与重定向循环
+
+---
+Task ID: 21
+Agent: orchestrator (main)
+Task: 修复 Vercel 部署后登录失败（数据库不存在）
+
+根因诊断:
+- 测试 https://tanbot-life.vercel.app/api/auth/login 返回 500：
+  "Environment variable not found: DATABASE_URL"
+- Vercel 是 Serverless 无持久化文件系统，本地 SQLite 文件(db/custom.db)不存在
+- 且 DATABASE_URL 环境变量未在 Vercel 项目配置
+- → 数据库为空 → piaoshu 账号不存在 → 登录失败
+
+解决方案:
+1. 新增 /api/setup 一键初始化接口（幂等，GET 请求）：
+   - 创建测试主理人 piaoshu/admin23（role=admin）
+   - 14 天营收记录 + 3 条巡店记录
+   - 2 集示例纪录片
+   - 9 个 AI 模型配置（Z.ai/DeepSeek/GPT-5.5/通义千问 等）
+   - 部署后访问 https://tanbot-life.vercel.app/api/setup 即可
+2. 新增 DEPLOY.md 完整部署指南：
+   - Turso（免费 Serverless SQLite）创建：turso db create tanbot
+   - 获取 URL：libsql://tanbot-xxx.turso.io + authToken
+   - Vercel 配置环境变量 DATABASE_URL=libsql://...?authToken=...
+   - Redeploy → 访问 /api/setup → 用 piaoshu/admin23 登录
+3. Prisma schema 保持 sqlite provider，与 Turso libSQL 兼容
+
+验证:
+- 本地 /api/setup 200 ✓（幂等，跳过已存在数据）
+- 本地 login piaoshu ✓ / dashboard+token 200 ✓
+- Vercel /api/setup 已部署（返回 DATABASE_URL 错误，确认环境变量待配置）
+- lint 0 error
+
+Vercel 部署需用户完成的 3 步（代码已就绪）:
+1. 创建 Turso 数据库，获取 libsql:// URL + token
+2. Vercel 项目 Settings → Environment Variables 添加 DATABASE_URL=libsql://...?authToken=...
+3. Redeploy 后访问 /api/setup 初始化，即可用 piaoshu/admin23 登录
+
+GitHub 同步: commit bd2ba8e push 成功，token 已从 remote 移除
