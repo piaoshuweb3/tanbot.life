@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import {
-  Flame, ArrowLeft, Loader2, Cpu, Plus, Check, X, Star, Settings,
-  ShieldCheck, Power, Save, Trash2,
+  Flame, ArrowLeft, Loader2, Cpu, Plus, Star,
+  ShieldCheck, Power, Save,
 } from "lucide-react";
 import { SiteHeader } from "@/components/site/site-header";
 import { Button } from "@/components/ui/button";
@@ -29,7 +28,6 @@ interface AIModel {
 }
 
 export default function AdminPage() {
-  const router = useRouter();
   const { toast } = useToast();
   const [models, setModels] = useState<AIModel[]>([]);
   const [loading, setLoading] = useState(true);

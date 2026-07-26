@@ -74,9 +74,33 @@ export function HeroManifesto() {
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
 
       <div className="relative flex min-h-screen flex-col">
-        {/* 滚动数据条（pt-16 为固定导航栏留位，mb-8 与下方内容拉开间距） */}
+        {/* 滚动数据条（pt-16 为固定导航栏留位） */}
         <div className="pt-16">
           <LiveTicker />
+        </div>
+
+        {/* 摊车效果图横幅 · 填充导航与数据间的视觉空挡 */}
+        <div className="relative h-32 w-full overflow-hidden border-y border-gold/15 sm:h-40 md:h-48">
+          <div className="absolute inset-0 flex">
+            <div className="h-full w-1/3 bg-cover bg-center" style={{ backgroundImage: "url(/images/cart-fill-1.jpg)" }} aria-hidden />
+            <div className="h-full w-1/3 bg-cover bg-center" style={{ backgroundImage: "url(/images/cart-fill-2.jpg)" }} aria-hidden />
+            <div className="h-full w-1/3 bg-cover bg-center" style={{ backgroundImage: "url(/images/cart-fill-3.jpg)" }} aria-hidden />
+          </div>
+          {/* 渐变遮罩：上融入导航、下融入数据，左右收边 */}
+          <div
+            className="absolute inset-0"
+            aria-hidden
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(20,20,20,0.85) 0%, rgba(20,20,20,0.4) 40%, rgba(20,20,20,0.5) 60%, rgba(20,20,20,0.9) 100%), linear-gradient(90deg, rgba(20,20,20,0.6) 0%, transparent 20%, transparent 80%, rgba(20,20,20,0.6) 100%)",
+            }}
+          />
+          {/* 横幅标语 */}
+          <div className="absolute inset-0 flex items-center justify-center px-4">
+            <p className="font-brush text-xl text-gold sm:text-2xl md:text-3xl" style={{ textShadow: "0 0 20px rgba(255,107,53,0.6)" }}>
+              炭火不灭 · 凡心不冷 · 公道自在
+            </p>
+          </div>
         </div>
 
         <div className="flex flex-1 flex-col items-center justify-center px-4 py-16 text-center sm:px-6">

@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
-import { llmComplete } from "@/lib/llm";
+import { llmChat } from "@/lib/llm";
 
 // AI 智能客服 —— 聊天（非流式，更可靠）
 export async function POST(req: Request) {
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
   try {
     // 只取最近 10 条消息避免超长
     const recent = messages.slice(-10);
-    const content = await llmComplete(systemPrompt, recent.map((m) => `${m.role === "user" ? "主理人" : "客服"}：${m.content}`).join("\n"), {
+    const content = await llmChat(systemPrompt, recent, {
       temperature: 0.7,
       maxTokens: 600,
     });
