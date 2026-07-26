@@ -5,7 +5,7 @@ import { Menu, X, Flame } from "lucide-react";
 
 const NAV = [
   { href: "#soul", label: "品牌灵魂" },
-  { href: "#manifesto", label: "序章" },
+  { href: "#about", label: "关于我" },
   { href: "#era", label: "时代" },
   { href: "#ai", label: "AI 系统" },
   { href: "#packages", label: "套餐" },
