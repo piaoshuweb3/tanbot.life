@@ -9,6 +9,7 @@ const NAV = [
   { href: "#era", label: "时代", external: false },
   { href: "#ai", label: "AI 系统", external: false },
   { href: "/inspect", label: "AI 巡店", external: true },
+  { href: "/documentary", label: "纪录片", external: true },
   { href: "#packages", label: "套餐", external: false },
   { href: "#asset", label: "品牌资产", external: false },
   { href: "#join", label: "加入", external: false },
@@ -44,8 +45,8 @@ export function SiteHeader() {
             <span className="font-display text-base font-black tracking-wide text-text-main">
               烟火节点
             </span>
-            <span className="text-[10px] font-medium tracking-[0.3em] text-gold">
-              TANBOT
+            <span className="text-[10px] font-medium tracking-[0.22em] text-gold">
+              TANBOT.LIFE
             </span>
           </div>
         </a>
@@ -63,10 +64,16 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <a
+            href="/login"
+            className="hidden items-center gap-1.5 rounded-md border border-gold/30 px-3 py-2 text-sm font-medium text-gold transition-all hover:border-gold/60 hover:bg-ink-3 sm:flex"
+          >
+            主理人登录
+          </a>
           <a
             href="#join"
-            className="hidden items-center gap-2 rounded-md bg-gold px-4 py-2 text-sm font-bold text-ink transition-all hover:bg-gold-bright hover:gold-glow sm:flex"
+            className="hidden items-center gap-2 rounded-md bg-gold px-4 py-2 text-sm font-bold text-ink transition-all hover:bg-gold-bright hover:gold-glow lg:flex"
           >
             成为街头主理人
           </a>
@@ -94,6 +101,13 @@ export function SiteHeader() {
                 {item.label}
               </a>
             ))}
+            <a
+              href="/login"
+              onClick={() => setOpen(false)}
+              className="mt-2 rounded-md border border-gold/30 px-4 py-3 text-center text-sm font-medium text-gold"
+            >
+              主理人登录
+            </a>
             <a
               href="#join"
               onClick={() => setOpen(false)}

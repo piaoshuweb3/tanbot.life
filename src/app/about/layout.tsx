@@ -12,11 +12,11 @@ export const metadata: Metadata = {
     "负债翻身",
     "AI赋能个体",
   ],
-  alternates: { canonical: "https://tanbot.cn/about" },
+  alternates: { canonical: "https://tanbot.life/about" },
   openGraph: {
     title: "关于我 · 飘叔三十年宣言全文 · 烟火节点 TANBOT",
     description: "一场关于尊严、生存与个体解放的宣言全文。飘叔从谷底爬起，用 AI 武装个体劳动者。",
-    url: "https://tanbot.cn/about",
+    url: "https://tanbot.life/about",
     type: "article",
   },
 };

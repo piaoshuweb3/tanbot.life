@@ -58,7 +58,7 @@ export function ManifestoSection() {
         {/* 引言 */}
         <div className="reveal mx-auto mt-14 max-w-3xl text-center">
           <p className="font-display text-xl leading-relaxed text-text-soft md:text-2xl">
-            “我叫飘叔。二十一年前，我东渡日本学经济，满脑子想着如何改造商业世界。
+            “我叫飘叔。三十年前，我东渡日本学经济，满脑子想着如何改造商业世界。
             <br />
             后来，一切都没了。公司破产，负债三千多万，妻离子散，锒铛入狱。
             <br />

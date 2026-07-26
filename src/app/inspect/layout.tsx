@@ -13,11 +13,11 @@ export const metadata: Metadata = {
     "烤串品质检测",
     "烟火节点",
   ],
-  alternates: { canonical: "https://tanbot.cn/inspect" },
+  alternates: { canonical: "https://tanbot.life/inspect" },
   openGraph: {
     title: "AI 智能巡店官 · 在线体验 · 烟火节点 TANBOT",
     description: "上传出品照片，AI 五维视觉打分 + SOP 纠正建议。比你还懂出品标准。",
-    url: "https://tanbot.cn/inspect",
+    url: "https://tanbot.life/inspect",
     type: "website",
   },
 };

@@ -90,6 +90,7 @@ export function SiteFooter() {
             </span>
             <div className="leading-none">
               <div className="font-display text-sm font-bold text-text-main">烟火节点 · 摊博 TANBOT</div>
+              <div className="text-[10px] tracking-wider text-gold">TANBOT.LIFE</div>
               <div className="text-[10px] text-muted-foreground">
                 让每一个认真生活的人，都能靠双手，有尊严地赚钱。
               </div>
@@ -99,7 +100,7 @@ export function SiteFooter() {
           <div className="flex items-center gap-3">
             {[
               { icon: MessageCircle, label: "微信公众号" },
-              { icon: Globe, label: "tanbot.cn" },
+              { icon: Globe, label: "tanbot.life" },
               { icon: Mail, label: "联系飘叔" },
               { icon: Github, label: "技术品牌" },
             ].map((l, i) => {

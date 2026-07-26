@@ -34,7 +34,7 @@ const maShanZheng = Ma_Shan_Zheng({
   preload: false,
 });
 
-const SITE_URL = "https://tanbot.cn";
+const SITE_URL = "https://tanbot.life";
 const SITE_NAME = "烟火节点 · 摊博 TANBOT";
 const SITE_DESC =
   "一场以 AI 武装个体劳动者的解放运动。用 AI 选址罗盘、智能巡店官、经营参谋赋能每一个地摊节点。让每一个认真生活的人，都能靠双手，有尊严地赚钱。";
