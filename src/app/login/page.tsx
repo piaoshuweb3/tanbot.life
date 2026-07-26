@@ -48,8 +48,10 @@ export default function LoginPage() {
         title: "登录成功",
         description: `欢迎回来，${json.data.user.realName || json.data.user.username}`,
       });
-      // 等待 cookie 写入后再跳转，避免 dashboard 首次 fetch 401
-      setTimeout(() => router.replace("/dashboard"), 300);
+      // 硬跳转确保 cookie 生效后进入后台（比 router.replace 更可靠）
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 400);
     } catch (e) {
       toast({
         title: "登录失败",
@@ -80,7 +82,9 @@ export default function LoginPage() {
       const json = await res.json().catch(() => ({ ok: false, error: "服务器响应异常" }));
       if (!json.ok) throw new Error(json.error || "注册失败");
       toast({ title: "注册成功", description: "已自动登录" });
-      setTimeout(() => router.replace("/dashboard"), 300);
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 400);
     } catch (e) {
       toast({
         title: "注册失败",

@@ -95,3 +95,20 @@ model Documentary {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+// ===== AI 模型配置 =====
+model AIModel {
+  id          String   @id @default(cuid())
+  key         String   @unique // 模型标识，如 deepseek / qwen / glm
+  name        String // 显示名称
+  provider    String // 提供商
+  category    String   @default("paid") // paid / free
+  apiEndpoint String? // 接口地址
+  apiKey      String? // 密钥（加密存储）
+  enabled     Boolean  @default(false)
+  isDefault   Boolean  @default(false)
+  priority    Int      @default(0)
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
