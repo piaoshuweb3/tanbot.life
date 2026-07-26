@@ -1,13 +1,10 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
+import { documentaryDb } from "@/lib/queries";
 
 // 获取纪录片列表（公开）
 export async function GET() {
-  const docs = await db.documentary.findMany({
-    where: { status: "published" },
-    orderBy: { episode: "asc" },
-  });
+  const docs = await documentaryDb.findAllPublished();
   return NextResponse.json({
     ok: true,
     data: docs.map((d) => ({
@@ -38,25 +35,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: "标题和视频地址不能为空" }, { status: 400 });
     }
 
-    // 自动计算集数
-    const count = await db.documentary.count();
-
-    const doc = await db.documentary.create({
-      data: {
-        episode: Number(body?.episode) || count + 1,
-        title,
-        description: String(body?.description ?? "").trim() || null,
-        videoUrl,
-        coverUrl: String(body?.coverUrl ?? "").trim() || null,
-        duration: Number(body?.duration) || null,
-        status: body?.status === "draft" ? "draft" : "published",
-      },
+    const count = await documentaryDb.count();
+    await documentaryDb.create({
+      episode: Number(body?.episode) || count + 1,
+      title,
+      description: String(body?.description ?? "").trim() || null,
+      videoUrl,
+      coverUrl: String(body?.coverUrl ?? "").trim() || null,
+      duration: Number(body?.duration) || null,
+      status: body?.status === "draft" ? "draft" : "published",
     });
-    return NextResponse.json({ ok: true, data: doc });
+    return NextResponse.json({ ok: true });
   } catch (e) {
-    return NextResponse.json(
-      { ok: false, error: "添加失败：" + (e instanceof Error ? e.message : "未知错误") },
-      { status: 500 }
-    );
+    return NextResponse.json({ ok: false, error: "添加失败：" + (e instanceof Error ? e.message : "未知错误") }, { status: 500 });
   }
 }

@@ -1,50 +1,39 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import { hashPassword } from "@/lib/auth";
+import { ensureSchema, hashPassword, managerDb, sessionDb, revenueDb, inspectionDb, documentaryDb, aiModelDb } from "@/lib/queries";
 
 // ===== 一键初始化数据库 =====
-// 部署后访问 /api/setup 即可创建测试账号 + 示例数据
-// 幂等：已存在则跳过
-
 export async function GET() {
   const results: string[] = [];
 
   try {
-    // 1. 创建测试主理人 piaoshu/admin23
-    const existingManager = await db.manager.findUnique({ where: { username: "piaoshu" } });
+    // 1. 确保表结构存在
+    await ensureSchema();
+    results.push("✓ 数据库表结构就绪");
+
+    // 2. 创建测试主理人 piaoshu/admin23
+    const existingManager = await managerDb.findByUsername("piaoshu");
     if (!existingManager) {
-      const manager = await db.manager.create({
-        data: {
-          username: "piaoshu",
-          passwordHash: hashPassword("admin23"),
-          realName: "飘叔",
-          nodeId: "001",
-          city: "上海",
-          category: "烤串",
-          creditScore: 95,
-          role: "admin",
-          status: "active",
-        },
+      const manager = await managerDb.create({
+        username: "piaoshu",
+        passwordHash: hashPassword("admin23"),
+        realName: "飘叔",
+        nodeId: "001",
+        city: "上海",
+        category: "烤串",
+        creditScore: 95,
+        role: "admin",
+        status: "active",
       });
       results.push("✓ 创建测试主理人 piaoshu (admin23)");
 
-      // 14 天营收
       const today = new Date();
       for (let i = 0; i < 14; i++) {
         const d = new Date(today);
         d.setDate(d.getDate() - i);
-        await db.revenue.create({
-          data: {
-            managerId: manager.id,
-            date: d,
-            amount: Math.round(700 + Math.random() * 500),
-            packages: JSON.stringify({ A: 30, B: 45, C: 15, D: 10 }),
-          },
-        });
+        await revenueDb.create(manager.id, d, Math.round(700 + Math.random() * 500), JSON.stringify({ A: 30, B: 45, C: 15, D: 10 }));
       }
       results.push("✓ 创建 14 天营收记录");
 
-      // 3 条巡店
       const scoreSets = [
         { o: 88, r: 90, p: 85, po: 88, b: 80, h: 90 },
         { o: 76, r: 85, p: 78, po: 80, b: 60, h: 75 },
@@ -54,21 +43,14 @@ export async function GET() {
         const s = scoreSets[i];
         const d = new Date(today);
         d.setDate(d.getDate() - i * 2);
-        await db.inspection.create({
-          data: {
-            managerId: manager.id,
-            date: d,
-            overall: s.o,
-            roast: s.r,
-            plating: s.p,
-            portion: s.po,
-            branding: s.b,
-            hygiene: s.h,
-            pass: s.o >= 75,
-            creditDelta: s.o >= 90 ? 3 : s.o >= 75 ? 1 : -1,
-            summary: s.o >= 85 ? "出品稳定，品牌展示到位" : "品牌标识需加强",
-            suggestion: s.b < 70 ? "请确保摊车铭牌与围裙品牌标识完整可见" : "继续保持",
-          },
+        await inspectionDb.create({
+          managerId: manager.id,
+          date: d,
+          overall: s.o, roast: s.r, plating: s.p, portion: s.po, branding: s.b, hygiene: s.h,
+          pass: s.o >= 75,
+          creditDelta: s.o >= 90 ? 3 : s.o >= 75 ? 1 : -1,
+          summary: s.o >= 85 ? "出品稳定，品牌展示到位" : "品牌标识需加强",
+          suggestion: s.b < 70 ? "请确保摊车铭牌与围裙品牌标识完整可见" : "继续保持",
         });
       }
       results.push("✓ 创建 3 条巡店记录");
@@ -76,36 +58,18 @@ export async function GET() {
       results.push("○ 主理人 piaoshu 已存在，跳过");
     }
 
-    // 2. 纪录片
-    const docCount = await db.documentary.count();
+    // 3. 纪录片
+    const docCount = await documentaryDb.count();
     if (docCount === 0) {
-      await db.documentary.createMany({
-        data: [
-          {
-            episode: 1,
-            title: "飘叔 · 从谷底到烟火",
-            description: "一个负债三千多万的老兵，如何从一辆破三轮车重新站起，用 AI 赋能个体劳动者。",
-            videoUrl: "",
-            coverUrl: "/images/cart-hero-night.png",
-            duration: 720,
-          },
-          {
-            episode: 2,
-            title: "烟火节点的诞生",
-            description: "清明上河凡心暖，飘叔公道串烤香。记录品牌从对联到系统的完整构思过程。",
-            videoUrl: "",
-            coverUrl: "/images/qingming-scroll.png",
-            duration: 0,
-          },
-        ],
-      });
+      await documentaryDb.create({ episode: 1, title: "飘叔 · 从谷底到烟火", description: "一个负债三千多万的老兵，如何从一辆破三轮车重新站起，用 AI 赋能个体劳动者。", videoUrl: "", coverUrl: "/images/cart-hero-night.png", duration: 720 });
+      await documentaryDb.create({ episode: 2, title: "烟火节点的诞生", description: "清明上河凡心暖，飘叔公道串烤香。记录品牌从对联到系统的完整构思过程。", videoUrl: "", coverUrl: "/images/qingming-scroll.png", duration: 0 });
       results.push("✓ 创建 2 集示例纪录片");
     } else {
       results.push("○ 纪录片已存在，跳过");
     }
 
-    // 3. AI 模型配置
-    const modelCount = await db.aIModel.count();
+    // 4. AI 模型
+    const modelCount = await aiModelDb.count();
     if (modelCount === 0) {
       const models = [
         { key: "zai", name: "Z.ai GLM", provider: "Z.ai", category: "free", priority: 95, description: "当前默认，VLM 视觉巡店与选址分析", apiEndpoint: "https://api.z.ai/api/paas/v4", isDefault: true, enabled: true },
@@ -119,19 +83,11 @@ export async function GET() {
         { key: "moonshot", name: "Kimi", provider: "月之暗面", category: "free", priority: 58, description: "免费，长文本处理优秀", apiEndpoint: "https://api.moonshot.cn/v1" },
       ];
       for (const m of models) {
-        await db.aIModel.create({
-          data: {
-            key: m.key,
-            name: m.name,
-            provider: m.provider,
-            category: m.category,
-            apiEndpoint: m.apiEndpoint,
-            apiKey: null,
-            enabled: m.enabled ?? false,
-            isDefault: m.isDefault ?? false,
-            priority: m.priority,
-            description: m.description,
-          },
+        await aiModelDb.create({
+          key: m.key, name: m.name, provider: m.provider, category: m.category,
+          apiEndpoint: m.apiEndpoint, apiKey: null,
+          enabled: m.enabled ?? false, isDefault: m.isDefault ?? false,
+          priority: m.priority, description: m.description,
         });
       }
       results.push(`✓ 创建 ${models.length} 个 AI 模型配置`);
@@ -146,9 +102,6 @@ export async function GET() {
       testAccount: { username: "piaoshu", password: "admin23" },
     });
   } catch (e) {
-    return NextResponse.json(
-      { ok: false, error: "初始化失败：" + (e instanceof Error ? e.message : "未知错误"), results },
-      { status: 500 }
-    );
+    return NextResponse.json({ ok: false, error: "初始化失败：" + (e instanceof Error ? e.message : "未知错误"), results }, { status: 500 });
   }
 }

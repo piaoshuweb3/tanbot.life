@@ -10,6 +10,7 @@ import { SiteHeader } from "@/components/site/site-header";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { authFetch, getToken, clearToken } from "@/lib/auth-client";
+import { Sparkles, Bot } from "lucide-react";
 
 interface DashboardData {
   user: {
@@ -62,6 +63,8 @@ export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const redirectedRef = useRef(false);
+  const [briefing, setBriefing] = useState<string | null>(null);
+  const [briefingLoading, setBriefingLoading] = useState(false);
 
   useEffect(() => {
     if (redirectedRef.current) return;
@@ -106,6 +109,24 @@ export default function DashboardPage() {
     clearToken();
     toast({ title: "已退出登录" });
     window.location.replace("/login");
+  };
+
+  const generateBriefing = async () => {
+    setBriefingLoading(true);
+    setBriefing(null);
+    try {
+      const res = await authFetch("/api/briefing");
+      const json = await res.json();
+      if (json.ok) {
+        setBriefing(json.data.briefing);
+      } else {
+        toast({ title: "简报生成失败", description: json.error, variant: "destructive" });
+      }
+    } catch {
+      toast({ title: "网络异常", variant: "destructive" });
+    } finally {
+      setBriefingLoading(false);
+    }
   };
 
   if (loading || !data) {
@@ -184,6 +205,33 @@ export default function DashboardPage() {
                 </div>
               );
             })}
+          </div>
+
+          {/* AI 经营参谋 · 每日简报 */}
+          <div className="reveal mb-8 overflow-hidden rounded-2xl border border-gold/25 bg-gradient-to-br from-ink-2 to-ink p-6">
+            <div className="mb-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-gold/40 bg-gold/10 text-gold">
+                  <Sparkles className="h-5 w-5" />
+                </span>
+                <div>
+                  <h2 className="font-display text-base font-bold text-rice">AI 经营参谋 · 每日简报</h2>
+                  <p className="text-xs text-muted-foreground">基于近 14 天数据，AI 自动生成经营建议</p>
+                </div>
+              </div>
+              <Button onClick={generateBriefing} disabled={briefingLoading} size="sm" className="bg-gold text-ink hover:bg-gold-bright">
+                {briefingLoading ? <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" /> : <Sparkles className="mr-1 h-3.5 w-3.5" />}
+                {briefingLoading ? "生成中…" : briefing ? "重新生成" : "生成简报"}
+              </Button>
+            </div>
+            {briefing && (
+              <div className="rounded-lg border border-gold/15 bg-ink/50 p-4 text-sm leading-relaxed text-text-soft whitespace-pre-wrap">
+                {briefing}
+              </div>
+            )}
+            {!briefing && !briefingLoading && (
+              <p className="text-sm text-muted-foreground">点击「生成简报」，AI 将分析你的营收与巡店数据，给出今日经营建议。</p>
+            )}
           </div>
 
           <div className="grid gap-6 lg:grid-cols-3">
@@ -287,6 +335,12 @@ export default function DashboardPage() {
                   <a href="/inspect" className="flex items-center justify-between rounded-lg border border-gold/15 bg-ink-2/40 p-3 transition-colors hover:border-gold/40">
                     <span className="flex items-center gap-2 text-sm text-text-soft">
                       <ScanLine className="h-4 w-4 text-gold" /> AI 巡店官
+                    </span>
+                    <span className="text-gold">→</span>
+                  </a>
+                  <a href="/chat" className="flex items-center justify-between rounded-lg border border-gold/15 bg-ink-2/40 p-3 transition-colors hover:border-gold/40">
+                    <span className="flex items-center gap-2 text-sm text-text-soft">
+                      <Bot className="h-4 w-4 text-gold" /> AI 智能客服
                     </span>
                     <span className="text-gold">→</span>
                   </a>
