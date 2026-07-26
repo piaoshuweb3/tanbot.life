@@ -182,3 +182,59 @@ Stage Summary:
 - SEO 全套：sitemap + robots + JSON-LD(Organization/WebSite/Service/FAQ/Breadcrumb) + OG/Twitter + canonical + 多语言 alternates
 - GEO 全套：llms.txt + AI 爬虫白名单 + FAQ 结构化 + ai-bot meta
 - lint 0 error，所有路由与 SEO 文件验证通过
+
+---
+Task ID: 15
+Agent: orchestrator (main)
+Task: 纪录片模块 + 主理人管理后台系统(登录/注册/会话) + TANBOT.LIFE域名 + 文字修正 + GitHub推送
+
+Work Log:
+文字修正 + 导航 + 域名:
+- manifesto-section.tsx：序章"二十一年前"→"三十年前"
+- site-header.tsx：导航新增「纪录片」(/documentary) + 「主理人登录」(/login) 按钮 + logo 下方英文改 TANBOT.LIFE
+- site-footer.tsx：品牌区显示 TANBOT.LIFE + 底栏链接改 tanbot.life
+- 全站 SITE_URL 由 tanbot.cn 改为 tanbot.life（layout/sitemap/robots/各二级页 layout/llms.txt）
+
+数据库 (Prisma + SQLite):
+- schema.prisma 新增 5 个模型：Manager(主理人)、Revenue(营收)、Inspection(巡店)、Session(会话)、Documentary(纪录片)
+- src/lib/auth.ts：scrypt 密码哈希(无需 bcrypt 依赖) + 会话 token 生成
+- src/lib/session.ts：getCurrentUser 从 cookie 获取登录主理人
+- src/lib/seed.ts：种子脚本，创建测试账号 piaoshu/admin23 + 14天营收 + 3条巡店 + 2集纪录片
+
+主理人管理后台系统:
+- /api/auth/login (POST登录/PUT注册)：支持 username/phone/wechat 三种方式，手机验证码演示1234，微信占位提示
+- /api/auth/session (GET)：获取当前会话
+- /api/auth/logout (POST)：退出登录
+- /api/dashboard (GET)：主理人后台数据(近14天营收+巡店记录+信用分+全网统计)
+- /api/documentary (GET列表/POST添加)：纪录片 CRUD，POST 仅管理员
+- /login 页：账号/手机/微信三 tab 切换，演示账号 piaoshu/admin23 预填
+- /dashboard 页：营收趋势图(SVG) + 巡店记录列表 + 4指标卡 + 全网数据 + 快捷入口
+- /documentary 页：纪录片卡片列表 + 管理员添加表单 + 视频播放弹窗
+
+SEO/GEO 更新:
+- sitemap 新增 /documentary + /login
+- 各新路由 layout.tsx 配 metadata(canonical + robots)
+- 全站 tanbot.cn → tanbot.life
+
+GitHub 推送:
+- .gitignore 新增 /db/ + /prisma/migrations/
+- 从 git 移除 .env 与 db/custom.db（不提交本地数据库与环境文件）
+- 创建 .env.example 供仓库参考
+- git commit: "feat: 烟火节点 TANBOT.LIFE 全站功能"(93134be, 150 文件)
+- git push 到 https://github.com/piaoshuweb3/tanbot.life.git (main 分支) 成功
+- 安全处理：推送后立即从 git remote URL 移除 token，token 未进入任何提交文件
+
+验证:
+- 8 路由全 200(/ /about /inspect /documentary /login /dashboard /sitemap.xml /robots.txt)
+- 登录 API piaoshu/admin23 ✓ 成功，session cookie 保持，dashboard API 返回 14 天营收
+- 纪录片 API 返回 2 集
+- 导航「纪录片」+「主理人登录」+ TANBOT.LIFE 显示正常，"三十年前"已修正
+- lint 0 error，dev log 无报错
+
+Stage Summary:
+- 纪录片模块上线：/documentary 列表 + 管理员添加视频 + 播放弹窗
+- 主理人管理后台完整：登录(账号/手机/微信)→ /dashboard(营收/巡店/信用/全网数据)
+- 测试账号 piaoshu/admin23 已入库
+- TANBOT.LIFE 域名全站展示
+- 已推送至 GitHub github.com/piaoshuweb3/tanbot.life.git
+- 安全提示：用户在聊天中明文提供 GitHub PAT，已用于推送并立即从配置移除；建议用户尽快在 GitHub 撤销该令牌并重新生成
