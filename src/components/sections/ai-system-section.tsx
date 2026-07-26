@@ -177,6 +177,35 @@ export function AISystemSection() {
           </div>
           <CompassDemo />
         </div>
+
+        {/* AI 巡店官 · 入口卡片 → /inspect */}
+        <div className="reveal mx-auto mt-16 max-w-4xl">
+          <a
+            href="/inspect"
+            className="group relative flex flex-col items-start gap-5 overflow-hidden rounded-2xl border border-gold/30 bg-gradient-to-br from-ink-2 to-ink p-7 transition-all hover:border-gold/60 hover:gold-glow sm:flex-row sm:items-center"
+          >
+            <div className="absolute -right-12 -top-12 h-36 w-36 rounded-full bg-gold/8 blur-3xl transition-all group-hover:bg-gold/18" />
+            <span className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-gold/40 bg-gold/10 text-gold">
+              <ScanLine className="h-7 w-7" />
+            </span>
+            <div className="relative flex-1">
+              <div className="flex items-center gap-2">
+                <h3 className="font-display text-lg font-bold text-rice">
+                  体验 AI 智能巡店官
+                </h3>
+                <span className="rounded-full border border-gold/30 px-2 py-0.5 text-[10px] text-gold">
+                  在线 Demo
+                </span>
+              </div>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                上传或拍摄一张出品照片，AI 视觉模型从烤色 / 摆盘 / 分量 / 品牌标识 / 卫生五维自动打分，给出 SOP 纠正建议。
+              </p>
+            </div>
+            <span className="relative font-display text-2xl text-gold transition-transform group-hover:translate-x-1">
+              →
+            </span>
+          </a>
+        </div>
       </div>
     </section>
   );

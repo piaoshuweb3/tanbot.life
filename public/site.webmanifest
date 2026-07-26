@@ -1,0 +1,18 @@
+{
+  "name": "烟火节点 · 摊博 TANBOT",
+  "short_name": "烟火节点",
+  "description": "一场以 AI 武装个体劳动者的解放运动。清明上河凡心暖，飘叔公道串烤香。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1A1A1A",
+  "theme_color": "#1A1A1A",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

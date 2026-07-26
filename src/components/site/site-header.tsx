@@ -8,6 +8,7 @@ const NAV = [
   { href: "/about", label: "关于我", external: true },
   { href: "#era", label: "时代", external: false },
   { href: "#ai", label: "AI 系统", external: false },
+  { href: "/inspect", label: "AI 巡店", external: true },
   { href: "#packages", label: "套餐", external: false },
   { href: "#asset", label: "品牌资产", external: false },
   { href: "#join", label: "加入", external: false },

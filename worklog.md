@@ -140,3 +140,45 @@ Stage Summary:
 - 首页不再臃肿，「关于我」完整宣言移至 /about 二级阅读页
 - 首页与二级页双向可达：导航栏 + 品牌灵魂区块入口卡片 → /about；/about 顶部「返回首页」→ /
 - lint 0 error，两个路由均 200，所有内容验证通过
+
+---
+Task ID: 14
+Agent: orchestrator (main)
+Task: 100% 实现 AI 截图(巡店)功能 + 二级页面展示 + API 接口 + SEO/GEO 各类引擎优化
+
+Work Log:
+AI 巡店官功能（100% 实现）:
+- 后端 API src/app/api/inspect/route.ts：接收 base64 图片 → 调用 z-ai-web-dev-sdk VLM(createVision) → 五维评分(烤色/摆盘/分量/品牌标识/卫生) + 亮点/问题/SOP建议/信用分变动 → JSON 返回。含 JSON 解析兜底与评分阈值逻辑
+- 前端组件 inspect-demo.tsx：拍照(capture=environment) + 上传图片 + 扫描动画(scan-down) + 评分环(ScoreRing SVG) + 五维评分条 + 亮点/问题/SOP 建议卡片
+- 二级页面 /inspect：功能特性介绍 + 互动 Demo + 信用分联动说明；顶部「返回首页」面包条
+- 首页 AI 系统区块新增「体验 AI 智能巡店官」入口卡片 → /inspect
+- 导航栏新增「AI 巡店」→ /inspect
+- 端到端测试：①上传系统截图→AI 正确识别"非出品内容"全0分+SOP建议重拍；②上传真实烤串图→烤色92/摆盘85/分量88/品牌标识0/卫生70，综合74不达标，AI 识别出"完全缺失品牌标识，无法体现飘叔公道品牌形象"，SOP建议"启用带品牌Logo的专用防油餐盘"
+
+SEO 优化:
+- layout.tsx 重构 metadata：title template、metadataBase、canonical、alternates(多语言)、robots(googleBot max-image-preview large)、OpenGraph(图片尺寸+alt)、Twitter card、keywords 16个、verification、themeColor viewport
+- 5 组 JSON-LD 结构化数据：Organization(含 founder 飘叔/Brand 飘叔公道/slogan)、WebSite、Service(AI巡店官)、FAQPage(5个 Q&A 覆盖核心问题)、BreadcrumbList
+- sitemap.ts：自动生成 /sitemap.xml，含 3 路由 + priority + changefreq
+- robots.ts：允许所有爬虫 + 明确允许 AI/LLM 爬虫(GPTBot/ChatGPT-User/Google-Extended/PerplexityBot/ClaudeBot/Amazonbot/Bytespider) + sitemap + host；删除冲突的静态 public/robots.txt
+- 二级页 layout.tsx 各自 metadata：/about(article类型)、/inspect
+- site.webmanifest：PWA 清单(theme_color #1A1A1A)
+
+GEO (Generative Engine Optimization):
+- public/llms.txt：LLM 友好的纯文本站点摘要，覆盖品牌道统/释义/三大信仰/4个AI智能体/套餐命名/投入风险/品牌矩阵/标准色/主要页面/创始人/联系
+- robots.ts 明确允许 AI 爬虫抓取
+- JSON-LD FAQPage 结构化 Q&A（LLM 常引用）
+- meta ai-bot:allow / llm-snippet:allow
+- 语义化 HTML + canonical URL
+
+验证:
+- 3 路由(/, /about, /inspect) + 4 SEO 文件(sitemap/robots/llms/manifest) 全部 200
+- 5 组 JSON-LD 全部注入(11 个 @type)
+- 16 个 keywords + 完整 OG/Twitter meta
+- API /api/inspect 真实图片端到端验证通过
+- lint 0 error，dev log 无报错
+
+Stage Summary:
+- AI 智能巡店官 100% 实现：拍照/上传 → VLM 视觉五维评分 → SOP 建议 → 信用分联动，真实烤串图测试 AI 准确识别品牌缺失问题
+- SEO 全套：sitemap + robots + JSON-LD(Organization/WebSite/Service/FAQ/Breadcrumb) + OG/Twitter + canonical + 多语言 alternates
+- GEO 全套：llms.txt + AI 爬虫白名单 + FAQ 结构化 + ai-bot meta
+- lint 0 error，所有路由与 SEO 文件验证通过
