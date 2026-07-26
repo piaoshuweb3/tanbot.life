@@ -9,6 +9,8 @@ const NAV = [
   { href: "#era", label: "时代", external: false },
   { href: "#ai", label: "AI 系统", external: false },
   { href: "/inspect", label: "AI 巡店", external: true },
+  { href: "/packages", label: "套餐工坊", external: true },
+  { href: "/chat", label: "智能客服", external: true },
   { href: "/documentary", label: "纪录片", external: true },
   { href: "#packages", label: "套餐", external: false },
   { href: "#asset", label: "品牌资产", external: false },
