@@ -1,0 +1,268 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-serif-sc);
+  --font-brush: var(--font-brush-sc);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-gold: var(--gold);
+  --color-ember: var(--ember);
+  --color-jade: var(--jade);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* ===== 烟火节点 / 摊博 TANBOT — 数字工业风 + 江湖烟火气 ===== */
+:root {
+  --radius: 0.75rem;
+
+  /* Brand palette */
+  --ink: #141414;          /* 深炭黑 — main bg (slightly deeper for drama) */
+  --ink-2: #1f1f1f;        /* 中灰黑 — section bg */
+  --ink-3: #2a2a2a;        /* 卡片底色 */
+  --ink-4: #333333;        /* elevated card / border highlight */
+  --gold: #c9a96e;         /* 赤金 — brand accent */
+  --gold-bright: #e3c690;  /* 赤金高光 */
+  --gold-deep: #a8884f;    /* 赤金深 */
+  --ember: #e57343;        /* 烟火橙 / 预警 */
+  --jade: #4caf50;         /* 成功 / 正向 */
+  --text-main: #f5f5f5;
+  --text-soft: #e0e0e0;
+  --text-muted: #a0a0a0;
+  --text-dim: #6f6f6f;
+
+  /* shadcn token mapping (dark-first) */
+  --background: var(--ink);
+  --foreground: var(--text-main);
+  --card: var(--ink-3);
+  --card-foreground: var(--text-main);
+  --popover: var(--ink-3);
+  --popover-foreground: var(--text-main);
+  --primary: var(--gold);
+  --primary-foreground: #1a1a1a;
+  --secondary: var(--ink-4);
+  --secondary-foreground: var(--text-soft);
+  --muted: var(--ink-2);
+  --muted-foreground: var(--text-muted);
+  --accent: var(--gold);
+  --accent-foreground: #1a1a1a;
+  --destructive: #e57343;
+  --border: rgba(201, 169, 110, 0.16);
+  --input: rgba(255, 255, 255, 0.08);
+  --ring: var(--gold);
+  --chart-1: #c9a96e;
+  --chart-2: #e57343;
+  --chart-3: #4caf50;
+  --chart-4: #6f8ab8;
+  --chart-5: #b07cc6;
+  --sidebar: var(--ink-2);
+  --sidebar-foreground: var(--text-main);
+  --sidebar-primary: var(--gold);
+  --sidebar-primary-foreground: #1a1a1a;
+  --sidebar-accent: var(--ink-3);
+  --sidebar-accent-foreground: var(--text-main);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--gold);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "tnum" 1, "ss01" 1;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+/* ===== Brand utilities ===== */
+.font-display {
+  font-family: var(--font-serif-sc), "Noto Serif SC", serif;
+}
+.font-brush {
+  font-family: var(--font-brush-sc), "Ma Shan Zheng", cursive;
+}
+
+.text-gold {
+  color: var(--gold);
+}
+.bg-ink {
+  background-color: var(--ink);
+}
+.bg-ink-2 {
+  background-color: var(--ink-2);
+}
+.bg-ink-3 {
+  background-color: var(--ink-3);
+}
+
+/* 赤金渐变文字 */
+.gold-text {
+  background: linear-gradient(135deg, #e3c690 0%, #c9a96e 45%, #a8884f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* 烟火余烬辉光 */
+.ember-glow {
+  box-shadow: 0 0 40px -8px rgba(229, 115, 67, 0.45);
+}
+.gold-glow {
+  box-shadow: 0 0 48px -10px rgba(201, 169, 110, 0.5);
+}
+
+/* 网格纹理背景（数字工业风） */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(201, 169, 110, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201, 169, 110, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.grid-bg-fine {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* 赤金细线分隔 */
+.gold-rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0.6;
+}
+
+/* 卡片：深色玻璃质感 */
+.glass-card {
+  background: linear-gradient(160deg, rgba(42, 42, 42, 0.85), rgba(20, 20, 20, 0.85));
+  border: 1px solid rgba(201, 169, 110, 0.14);
+  backdrop-filter: blur(6px);
+}
+.glass-card:hover {
+  border-color: rgba(201, 169, 110, 0.38);
+}
+
+/* 烟火粒子径向光 */
+.radial-ember {
+  background: radial-gradient(circle at 50% 50%, rgba(229, 115, 67, 0.18), transparent 60%);
+}
+.radial-gold {
+  background: radial-gradient(circle at 50% 0%, rgba(201, 169, 110, 0.16), transparent 55%);
+}
+
+/* 滚动条 */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--ink);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--gold-deep), var(--ink-4));
+  border-radius: 999px;
+  border: 2px solid var(--ink);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
+}
+
+/* 选区 */
+::selection {
+  background: rgba(201, 169, 110, 0.3);
+  color: #fff;
+}
+
+/* 动画 */
+@keyframes float-up {
+  0% { transform: translateY(0); opacity: 0; }
+  20% { opacity: 0.9; }
+  100% { transform: translateY(-120px); opacity: 0; }
+}
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 169, 110, 0.45); }
+  50% { box-shadow: 0 0 0 12px rgba(201, 169, 110, 0); }
+}
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes ember-rise {
+  0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+  10% { opacity: 0.9; }
+  90% { opacity: 0.7; }
+  100% { transform: translateY(-180px) translateX(20px) scale(0.3); opacity: 0; }
+}
+@keyframes scan-line {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(2000%); }
+}
+.animate-ticker {
+  animation: ticker 40s linear infinite;
+}
+.animate-pulse-gold {
+  animation: pulse-gold 2.4s ease-out infinite;
+}
+
+/* reveal on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* number tabular */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
