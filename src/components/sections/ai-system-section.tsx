@@ -4,6 +4,7 @@ import { Compass, ScanLine, BarChart3, BotMessageSquare, UtensilsCrossed, Shield
 import { SectionHeading } from "@/components/site/section-heading";
 import { CompassDemo } from "./compass-demo";
 import { DashboardMock } from "./dashboard-mock";
+import { ConsoleVision } from "./console-vision";
 
 const AGENTS = [
   {
@@ -149,6 +150,9 @@ export function AISystemSection() {
             </p>
           </div>
         </div>
+
+        {/* AI 节点系统 · 视觉化表达 */}
+        <ConsoleVision />
 
         {/* 实时数据大屏 */}
         <div className="reveal mt-20">

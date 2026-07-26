@@ -4,8 +4,12 @@ import { useReveal } from "@/hooks/use-reveal";
 import { SiteHeader } from "@/components/site/site-header";
 import { HeroManifesto } from "@/components/sections/hero-manifesto";
 import { ManifestoSection } from "@/components/sections/manifesto-section";
+import { BrandSoulSection } from "@/components/sections/brand-soul-section";
 import { EraSection } from "@/components/sections/era-section";
 import { AISystemSection } from "@/components/sections/ai-system-section";
+import { PackageSection } from "@/components/sections/package-section";
+import { BrandAssetSection } from "@/components/sections/brand-asset-section";
+import { CopywallSection } from "@/components/sections/copywall-section";
 import { BrandMatrixSection } from "@/components/sections/brand-matrix-section";
 import { RecruitSection } from "@/components/sections/recruit-section";
 import { SiteFooter } from "@/components/sections/site-footer";
@@ -19,8 +23,12 @@ export default function Home() {
       <main className="flex-1">
         <HeroManifesto />
         <ManifestoSection />
+        <BrandSoulSection />
         <EraSection />
         <AISystemSection />
+        <PackageSection />
+        <BrandAssetSection />
+        <CopywallSection />
         <BrandMatrixSection />
         <RecruitSection />
       </main>

@@ -51,23 +51,29 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* ===== 烟火节点 / 摊博 TANBOT — 数字工业风 + 江湖烟火气 ===== */
+/* ===== 烟火节点 / 飘叔公道 — 清明上河 · 炭火凡心 =====
+   官方标准色：炭黑 #1A1A1A · 暖橘 #FF6B35 · 宣米白 #F5F0E8 · 靛青 #1E4A5F */
 :root {
   --radius: 0.75rem;
 
-  /* Brand palette */
-  --ink: #141414;          /* 深炭黑 — main bg (slightly deeper for drama) */
-  --ink-2: #1f1f1f;        /* 中灰黑 — section bg */
-  --ink-3: #2a2a2a;        /* 卡片底色 */
-  --ink-4: #333333;        /* elevated card / border highlight */
-  --gold: #c9a96e;         /* 赤金 — brand accent */
-  --gold-bright: #e3c690;  /* 赤金高光 */
-  --gold-deep: #a8884f;    /* 赤金深 */
-  --ember: #e57343;        /* 烟火橙 / 预警 */
+  /* Brand palette · 品牌标准色 */
+  --ink: #1A1A1A;          /* 炭黑 — 炉火基底，稳重 */
+  --ink-2: #232323;        /* 中炭黑 — section bg */
+  --ink-3: #2c2c2c;        /* 卡片底色 */
+  --ink-4: #363636;        /* elevated card / border highlight */
+  --gold: #FF6B35;         /* 暖橘 — 炭火光色，温度（主品牌色） */
+  --gold-bright: #FF8A5C;  /* 暖橘高光 */
+  --gold-deep: #D4521F;    /* 暖橘深 */
+  --indigo: #1E4A5F;       /* 靛青 — 宋代服饰色，点缀 */
+  --indigo-soft: #2E6A85;  /* 靛青亮 */
+  --rice: #F5F0E8;         /* 宣米白 — 宣纸质感，文化 */
+  --rice-dim: #CFC8BC;     /* 宣米白暗 */
+  --ember: #FF6B35;        /* 烟火橙（与暖橘统一） */
   --jade: #4caf50;         /* 成功 / 正向 */
-  --text-main: #f5f5f5;
-  --text-soft: #e0e0e0;
-  --text-muted: #a0a0a0;
+  --seal: #C0392B;         /* 朱文印章红 */
+  --text-main: #F5F0E8;    /* 主文字用宣米白，文化质感 */
+  --text-soft: #E8E2D6;
+  --text-muted: #A89F90;
   --text-dim: #6f6f6f;
 
   /* shadcn token mapping (dark-first) */
@@ -78,26 +84,26 @@
   --popover: var(--ink-3);
   --popover-foreground: var(--text-main);
   --primary: var(--gold);
-  --primary-foreground: #1a1a1a;
+  --primary-foreground: #1A1A1A;
   --secondary: var(--ink-4);
   --secondary-foreground: var(--text-soft);
   --muted: var(--ink-2);
   --muted-foreground: var(--text-muted);
   --accent: var(--gold);
-  --accent-foreground: #1a1a1a;
-  --destructive: #e57343;
-  --border: rgba(201, 169, 110, 0.16);
+  --accent-foreground: #1A1A1A;
+  --destructive: #FF6B35;
+  --border: rgba(255, 107, 53, 0.18);
   --input: rgba(255, 255, 255, 0.08);
   --ring: var(--gold);
-  --chart-1: #c9a96e;
-  --chart-2: #e57343;
+  --chart-1: #FF6B35;
+  --chart-2: #1E4A5F;
   --chart-3: #4caf50;
-  --chart-4: #6f8ab8;
-  --chart-5: #b07cc6;
+  --chart-4: #F5F0E8;
+  --chart-5: #C0392B;
   --sidebar: var(--ink-2);
   --sidebar-foreground: var(--text-main);
   --sidebar-primary: var(--gold);
-  --sidebar-primary-foreground: #1a1a1a;
+  --sidebar-primary-foreground: #1A1A1A;
   --sidebar-accent: var(--ink-3);
   --sidebar-accent-foreground: var(--text-main);
   --sidebar-border: var(--border);
@@ -140,28 +146,44 @@
   background-color: var(--ink-3);
 }
 
-/* 赤金渐变文字 */
+/* 暖橘渐变文字（炭火光色） */
 .gold-text {
-  background: linear-gradient(135deg, #e3c690 0%, #c9a96e 45%, #a8884f 100%);
+  background: linear-gradient(135deg, #FF8A5C 0%, #FF6B35 45%, #D4521F 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+/* 宣米白渐变文字（书法墨韵） */
+.rice-text {
+  background: linear-gradient(135deg, #FFFFFF 0%, #F5F0E8 50%, #CFC8BC 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
 
+.text-indigo { color: var(--indigo-soft); }
+.text-rice { color: var(--rice); }
+.text-seal { color: var(--seal); }
+.bg-indigo { background-color: var(--indigo); }
+.bg-rice { background-color: var(--rice); }
+.border-indigo { border-color: var(--indigo-soft); }
+.border-rice { border-color: var(--rice-dim); }
+
 /* 烟火余烬辉光 */
 .ember-glow {
-  box-shadow: 0 0 40px -8px rgba(229, 115, 67, 0.45);
+  box-shadow: 0 0 40px -8px rgba(255, 107, 53, 0.5);
 }
 .gold-glow {
-  box-shadow: 0 0 48px -10px rgba(201, 169, 110, 0.5);
+  box-shadow: 0 0 48px -10px rgba(255, 107, 53, 0.55);
 }
 
 /* 网格纹理背景（数字工业风） */
 .grid-bg {
   background-image:
-    linear-gradient(rgba(201, 169, 110, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(201, 169, 110, 0.05) 1px, transparent 1px);
+    linear-gradient(rgba(255, 107, 53, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 107, 53, 0.05) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 .grid-bg-fine {
@@ -180,20 +202,44 @@
 
 /* 卡片：深色玻璃质感 */
 .glass-card {
-  background: linear-gradient(160deg, rgba(42, 42, 42, 0.85), rgba(20, 20, 20, 0.85));
-  border: 1px solid rgba(201, 169, 110, 0.14);
+  background: linear-gradient(160deg, rgba(44, 44, 44, 0.85), rgba(26, 26, 26, 0.85));
+  border: 1px solid rgba(255, 107, 53, 0.16);
   backdrop-filter: blur(6px);
 }
 .glass-card:hover {
-  border-color: rgba(201, 169, 110, 0.38);
+  border-color: rgba(255, 107, 53, 0.4);
+}
+
+/* 宣纸纹理（文化质感卡片） */
+.rice-paper {
+  background:
+    linear-gradient(160deg, rgba(245, 240, 232, 0.06), rgba(245, 240, 232, 0.02)),
+    linear-gradient(rgba(245, 240, 232, 0.012) 1px, transparent 1px);
+  background-size: auto, 28px 28px;
+  border: 1px solid rgba(245, 240, 232, 0.12);
+}
+
+/* 朱文印章 */
+.seal-stamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--seal);
+  color: var(--rice);
+  font-family: var(--font-serif-sc), serif;
+  border-radius: 4px;
+  box-shadow: 0 0 0 2px var(--seal), inset 0 0 0 1px rgba(245,240,232,0.3);
 }
 
 /* 烟火粒子径向光 */
 .radial-ember {
-  background: radial-gradient(circle at 50% 50%, rgba(229, 115, 67, 0.18), transparent 60%);
+  background: radial-gradient(circle at 50% 50%, rgba(255, 107, 53, 0.22), transparent 60%);
 }
 .radial-gold {
-  background: radial-gradient(circle at 50% 0%, rgba(201, 169, 110, 0.16), transparent 55%);
+  background: radial-gradient(circle at 50% 0%, rgba(255, 107, 53, 0.18), transparent 55%);
+}
+.radial-indigo {
+  background: radial-gradient(circle at 50% 50%, rgba(30, 74, 95, 0.28), transparent 60%);
 }
 
 /* 滚动条 */

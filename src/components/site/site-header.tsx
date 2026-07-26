@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import { Menu, X, Flame } from "lucide-react";
 
 const NAV = [
-  { href: "#manifesto", label: "宣言" },
+  { href: "#soul", label: "品牌灵魂" },
+  { href: "#manifesto", label: "序章" },
   { href: "#era", label: "时代" },
   { href: "#ai", label: "AI 系统" },
-  { href: "#compass", label: "选址罗盘" },
-  { href: "#brand", label: "品牌矩阵" },
+  { href: "#packages", label: "套餐" },
+  { href: "#asset", label: "品牌资产" },
   { href: "#join", label: "加入" },
 ];
 

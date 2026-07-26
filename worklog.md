@@ -56,3 +56,27 @@ Stage Summary:
 - hydration mismatch 彻底修复（useSyncExternalStore 方案，符合 React 18+ 官方推荐）
 - 事实修正完成：负债三千多万 + 北方行业第一名
 - lint 0 error，dev log 无报错，所有核心交互端到端验证通过
+
+---
+Task ID: 10
+Agent: orchestrator (main)
+Task: 围绕定稿对联重构品牌系统——官方4色重构、对联为绝对核心、新增5大品牌内容区块、中日特色背景图
+
+Work Log:
+- 重构 globals.css 调色板为官方标准色：炭黑#1A1A1A / 暖橘#FF6B35(主品牌色，repoint --gold) / 宣米白#F5F0E8(文字+文化) / 靛青#1E4A5F(点缀) + 朱文印章红#C0392B；新增 .rice-text/.rice-paper/.seal-stamp/.radial-indigo/.text-indigo 等工具类
+- 用 image-generation skill 生成 2 张中日特色图：cart-hero-night.png(宋式摊车+日式灯笼, 1344x768) + qingming-scroll.png(数字清明上河长卷)；修正 size 参数(1440x720 被 API 拒，改 1344x768 满足 32 整数倍+像素上限)
+- hero-manifesto.tsx 重构：横批「飘叔公道」朱文印章 + 对联竖式居中宣米白书法+暖橘辉光 + 暖橘 CTA + 新背景图(cart-hero-night) 渐隐遮罩
+- 新增 brand-soul-section.tsx：对联主舞台(横批+上下联竖排) + 4 条品牌释义(清明上河/凡心暖/飘叔公道/串烤香) + 品牌定调「中国市井文明的一个现代窗口·炭火不灭凡心不冷公道自在」
+- 新增 package-section.tsx：4 套餐命名体系(虹桥小聚/汴河夜话/孙羊正席/贩夫收摊，各含内容+定位+《清明上河图》典故) + 三分钟出餐 SOP 数字化(10s/20s/90s/60s)
+- 新增 brand-asset-section.tsx：招牌装置(主招牌200×80/侧幌靛青/摊车模块化/节点铭牌区块链) + 视觉系统(LOGO飘字烟气巧思/朱文印章/服装三件套/餐具物料) + 标准色板(4色实物展示)
+- 新增 console-vision.tsx：数字清明上河图控制台(qingming-scroll 长卷背景+13 盏节点灯+河流曲线+实时指标) + 区块链授权书(古画样式+哈希) + 智能烤炉(单旋钮+小屏) 视觉化
+- 新增 copywall-section.tsx：主slogan+3衍生slogan + 店内立牌3句 + 杯垫文案3句 + 打包袋背面 + 海外英文slogan + 招商话术核心句
+- page.tsx 重排叙事流：Hero→序章→品牌灵魂→时代→AI系统→套餐→品牌资产→文案金句→品牌矩阵→招募→Footer
+- site-header 导航更新为：品牌灵魂/序章/时代/AI系统/套餐/品牌资产/加入
+- Agent Browser 自验证：0 错误 0 hydration 警告、hero 背景 cart-hero-night 加载(opacity:1)、横批+对联宣米白渲染、品牌灵魂释义全在、4套餐名齐全、品牌资产(招牌+标准色炭黑/暖橘/宣米白/靛青)齐全、文案金句墙齐全、console 长卷背景+13 灯+授权书+烤炉渲染、AI选址罗盘 POST 200、移动端 390px 响应式正常
+
+Stage Summary:
+- 全站围绕定稿对联「清明上河凡心暖·飘叔公道串烤香」归拢为完整品牌体系
+- 官方4色全面落地（暖橘取代赤金为主品牌色，靛青/宣米白为文化辅色）
+- 新增 5 大品牌内容区块 + AI控制台视觉化 + 2 张中日特色定制图
+- lint 0 error，dev log 无报错，所有交互端到端验证通过
