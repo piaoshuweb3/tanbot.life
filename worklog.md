@@ -531,3 +531,32 @@ Vercel 最后一步（用户操作）:
 - Redeploy → 访问 /api/setup 初始化 → piaoshu/admin23 登录
 
 GitHub: commit cc2bfbd push 成功
+
+---
+Task ID: 24
+Agent: orchestrator (main)
+Task: 修复 AI 客服 + 首页空挡填充 + 管理页面渲染
+
+1. AI 客服修复（DeepSeek 替换 z-ai SDK）:
+   - 根因：z-ai-web-dev-sdk 在 Vercel 报 "Configuration file not found or invalid. Please create .z-ai-config"
+   - 修复：src/lib/llm.ts 改用 DeepSeek API（OpenAI 兼容接口）
+   · 内置 key，无需额外配置即可工作
+   · 支持 DEEPSEEK_API_KEY/OPENAI_API_KEY 环境变量覆盖
+   - /api/chat 用 llmChat 多轮对话
+   - Vercel 实测：chat 返回 "嘿，主理人飘叔，你好哇！我是飘叔公道的AI智能客服..."
+
+2. 首页导航与数据间空挡填充:
+   - 新增摊车效果图横幅（cart-fill-1/2/3.jpg，3张上传图）
+   - 滚动字幕下方、主内容上方，h-32~48 响应式
+   - 渐变遮罩 + 书法标语「炭火不灭·凡心不冷·公道自在」
+   - Vercel 实测：3 张图片加载正常
+
+3. 管理页面渲染修复:
+   - 移除未使用导入(Check/X/Settings/Trash2/useRouter)
+   - /admin 200，9 个模型配置正常显示与编辑
+
+验证:
+- 本地：chat ✓ briefing ✓ package ✓ / 5 路由 200 / lint 0 error
+- Vercel：login ✓ / chat ✓(DeepSeek真实回复) / banner 3图 ✓ / admin 200 ✓
+
+GitHub: commit 91a1cf7 push 成功，Vercel 自动部署成功
