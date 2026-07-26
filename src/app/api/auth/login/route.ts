@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { NextResponse } from "next/server";
 import { managerDb, sessionDb, revenueDb, inspectionDb } from "@/lib/queries";
 import { hashPassword, verifyPassword, generateToken, SESSION_COOKIE, SESSION_MAX_AGE } from "@/lib/queries";

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { NextResponse } from "next/server";
 
 // ===== AI 选址罗盘 · 多因子叠加评估模型（演示版） =====

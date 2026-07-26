@@ -4,7 +4,8 @@ import { createClient, type Client } from "@libsql/client";
  * 统一数据库客户端 —— 使用 @libsql/client
  * 本地开发：file: 路径（本地 SQLite）
  * 生产环境（Vercel/Turso）：libsql:// 远程 URL
- * 两者完全兼容，无需 Prisma 查询引擎。
+ *
+ * 懒加载：仅在首次查询时创建连接，避免 Next.js 构建时（无数据库环境）报错。
  */
 
 const globalForDb = globalThis as unknown as { dbClient: Client | undefined };
@@ -24,8 +25,31 @@ function createDbClient(): Client {
   return createClient({ url: dbUrl || "file:./db/custom.db" });
 }
 
-export const rawDb = globalForDb.dbClient ?? createDbClient();
-if (process.env.NODE_ENV !== "production") globalForDb.dbClient = rawDb;
+/**
+ * 懒加载代理：首次访问时才创建真实连接。
+ * 构建时若 DATABASE_URL 未配置或文件不存在，不会立即报错。
+ */
+class LazyDb implements ProxyHandler<Client> {
+  private _client: Client | null = null;
+
+  private get client(): Client {
+    if (!this._client) {
+      this._client = globalForDb.dbClient ?? createDbClient();
+      if (process.env.NODE_ENV !== "production") globalForDb.dbClient = this._client;
+    }
+    return this._client;
+  }
+
+  get(_target: unknown, prop: string) {
+    const c = this.client;
+    const val = (c as any)[prop];
+    return typeof val === "function" ? val.bind(c) : val;
+  }
+}
+
+// 用 Proxy 实现懒加载，rawDb 在首次方法调用时才真正连接
+const _lazyTarget = {} as Client;
+export const rawDb = new Proxy(_lazyTarget, new LazyDb()) as Client;
 
 // ===== 类型定义 =====
 export interface Manager {
