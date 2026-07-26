@@ -35,3 +35,24 @@ Stage Summary:
 - 整站 8 大区块全部上线，lint 0 error，dev log 无报错
 - 核心交互（AI选址罗盘 + 招募表单）端到端验证通过
 - 设计风格「数字工业风+江湖烟火气」落地：深炭黑底 + 赤金 + 烟火橙，书法诗 + 工业网格 + 余烬粒子
+
+---
+Task ID: 9
+Agent: orchestrator (main)
+Task: 首页加入摊车渐隐背景图 + 篝火火苗效果 + 修正事实错误（负债三千多万/北方行业第一名）+ 修复 hydration mismatch
+
+Work Log:
+- 复制 3 张摊车参考图到 public/images/（cart-hero.jpg 黑色烤串餐车 / cart-lantern.jpg 日式红灯笼 / cart-stall.jpg）
+- 用 VLM 识别 8 张图片，选定 food cart.jpg（黑色烤串餐车+黄色发光招牌）作为 hero 背景，912823418225399354.jpg（日式红灯笼·清明上河意境）作为品牌区块展示
+- 修复 EmberField hydration mismatch：根因是 Math.sin 浮点在 Node SSR 与浏览器产生不同精度字符串。改用 useSyncExternalStore 做 SSR 安全 mount 检测（服务端返回 false，hydration 一致后再渲染粒子），彻底消除 mismatch
+- 新增 CampfireFlame 组件：纯 CSS 四层径向渐变（外暗红/中橙黄/内赤金/白热核心）+ 地面辉光 + 7 颗上升火星，5 套 flicker 动画关键帧（globals.css: fire-glow/flicker-outer/mid/inner/core/spark-rise）
+- hero-manifesto.tsx：插入 cart-hero.jpg 渐隐背景（上下浓黑+径向收边遮罩）+ 底部 CampfireFlame(300×520)
+- brand-matrix-section.tsx：新增「品牌的力量·移动烟火艺术装置」摊车展示区块（cart-lantern.jpg + 文案呼应"清明上河文化与现代工业美学"）
+- 修正事实：manifesto-section.tsx 引言"负债两千多万"→"三千多万"；旅程卡片"11 年做到几千万规模"→"11 年时间，做到北方行业第一名、几千万规模"
+- Agent Browser 自验证：hydration 错误清零（errors/console 均无 mismatch）、hero 背景图正确加载、5 层火焰动画运行、三千多万/北方行业第一名文本正确、品牌摊车区块渲染、AI 选址罗盘 POST 200、移动端 390px 响应式正常
+
+Stage Summary:
+- 首页现呈"摊车渐隐背景 + 底部篝火火苗 + 上升余烬"三层烟火气氛围
+- hydration mismatch 彻底修复（useSyncExternalStore 方案，符合 React 18+ 官方推荐）
+- 事实修正完成：负债三千多万 + 北方行业第一名
+- lint 0 error，dev log 无报错，所有核心交互端到端验证通过

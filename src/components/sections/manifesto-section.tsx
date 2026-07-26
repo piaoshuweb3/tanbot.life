@@ -14,7 +14,7 @@ const JOURNEY = [
     icon: Building2,
     year: "归国 · 互联网",
     title: "亲手托起一个时代",
-    desc: "回国扎进互联网浪潮，做 IDC 基础设施。亲手搭建的机房，托起了无数后来改变中国互联网格局的公司。11 年，做到几千万规模。",
+    desc: "回国扎进互联网浪潮，做 IDC 基础设施。亲手搭建的机房，托起了无数后来改变中国互联网格局的公司。11 年时间，做到北方行业第一名、几千万规模。",
   },
   {
     icon: TrendingDown,
@@ -60,7 +60,7 @@ export function ManifestoSection() {
           <p className="font-display text-xl leading-relaxed text-text-soft md:text-2xl">
             “我叫飘叔。二十一年前，我东渡日本学经济，满脑子想着如何改造商业世界。
             <br />
-            后来，一切都没了。公司破产，负债两千多万，妻离子散，锒铛入狱。
+            后来，一切都没了。公司破产，负债三千多万，妻离子散，锒铛入狱。
             <br />
             <span className="text-gold">但是，我从一辆破三轮车上，重新站了起来。</span>”
           </p>

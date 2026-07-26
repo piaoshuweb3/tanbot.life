@@ -2,6 +2,7 @@
 
 import { ArrowDown, Compass, Sparkles } from "lucide-react";
 import { EmberField } from "@/components/site/ember-field";
+import { CampfireFlame } from "@/components/site/campfire-flame";
 
 function LiveTicker() {
   // 模拟"作战指挥室"实时数据条
@@ -32,10 +33,30 @@ function LiveTicker() {
 export function HeroManifesto() {
   return (
     <section id="top" className="relative min-h-screen overflow-hidden bg-ink">
-      {/* 背景层 */}
-      <div className="absolute inset-0 grid-bg opacity-70" />
-      <div className="absolute inset-0 radial-gold" />
+      {/* 摊车效果图背景 · 逐渐弱化 */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: "url(/images/cart-hero.jpg)" }}
+        aria-hidden
+      />
+      {/* 渐隐遮罩：上方浓黑、下方融入烟火，左右收边 */}
+      <div
+        className="absolute inset-0"
+        aria-hidden
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(20,20,20,0.92) 0%, rgba(20,20,20,0.72) 28%, rgba(20,20,20,0.78) 60%, rgba(20,20,20,0.96) 100%), radial-gradient(ellipse at center, transparent 35%, rgba(20,20,20,0.85) 100%)",
+        }}
+      />
+      {/* 赤金网格纹理叠加 */}
+      <div className="absolute inset-0 grid-bg opacity-40" />
+      <div className="absolute inset-0 radial-gold opacity-80" />
       <div className="absolute inset-x-0 bottom-0 h-1/2 radial-ember" />
+
+      {/* 篝火火苗 · 底部居中 */}
+      <CampfireFlame height={300} width={520} />
+
+      {/* 上升余烬粒子 */}
       <EmberField count={34} />
 
       {/* 顶部呼吸光带 */}

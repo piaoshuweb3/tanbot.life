@@ -1,6 +1,6 @@
 "use client";
 
-import { Cpu, Network, UserCheck, Utensils } from "lucide-react";
+import { Cpu, Network, UserCheck, Utensils, Flame } from "lucide-react";
 import { SectionHeading } from "@/components/site/section-heading";
 
 const MATRIX = [
@@ -95,6 +95,47 @@ export function BrandMatrixSection() {
               </div>
             );
           })}
+        </div>
+
+        {/* 品牌的力量 · 摊车移动艺术装置 */}
+        <div className="reveal mt-16 overflow-hidden rounded-2xl border border-gold/25 bg-gradient-to-br from-ink-2 to-ink">
+          <div className="grid items-stretch lg:grid-cols-2">
+            <div className="relative min-h-[280px] overflow-hidden">
+              <div
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-[1200ms] hover:scale-105"
+                style={{ backgroundImage: "url(/images/cart-lantern.jpg)" }}
+                aria-hidden
+              />
+              <div
+                className="absolute inset-0"
+                aria-hidden
+                style={{
+                  background:
+                    "linear-gradient(90deg, rgba(20,20,20,0.55) 0%, transparent 45%, rgba(20,20,20,0.7) 100%)",
+                }}
+              />
+              <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full border border-gold/30 bg-ink/70 px-3 py-1 text-[11px] text-gold backdrop-blur-sm">
+                <Flame className="h-3 w-3" /> 参考效果图 · 烟火节点摊车概念
+              </div>
+            </div>
+            <div className="relative flex flex-col justify-center p-8 md:p-10">
+              <div className="absolute inset-0 radial-ember opacity-40" />
+              <div className="relative">
+                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-xs font-medium text-gold">
+                  <Utensils className="h-3.5 w-3.5" /> 品牌的力量 · 从一辆车开始
+                </div>
+                <h3 className="font-display text-2xl font-black text-text-main md:text-3xl">
+                  一座移动的<span className="gold-text">烟火艺术装置</span>
+                </h3>
+                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                  我们的摊车，不是普通的铁皮三轮车。它融汇了「清明上河」文化与现代工业美学——当它出现在街头，就是「专业」与「信任」的代名词，让你从周围所有摊贩中立刻脱颖而出。
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-text-soft">
+                  顾客会拍照、会传播、会信任，并最终成为你的回头客。
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* 投入与风险共担 */}
