@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { SectionHeading } from "@/components/site/section-heading";
+import { authFetch, getToken, clearToken } from "@/lib/auth-client";
 
 interface AIModel {
   id: string;
@@ -42,12 +43,18 @@ export default function AdminPage() {
 
   const load = async () => {
     if (redirectedRef.current) return;
+    if (!getToken()) {
+      redirectedRef.current = true;
+      window.location.replace("/login");
+      return;
+    }
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/models", { cache: "no-store", credentials: "same-origin" });
-      if (res.status === 403) {
+      const res = await authFetch("/api/admin/models");
+      if (res.status === 401 || res.status === 403) {
         redirectedRef.current = true;
-        setTimeout(() => window.location.replace("/login"), 100);
+        clearToken();
+        window.location.replace("/login");
         return;
       }
       const json = await res.json();
@@ -71,7 +78,7 @@ export default function AdminPage() {
   }, []);
 
   const toggle = async (m: AIModel, field: "enabled" | "isDefault", value: boolean) => {
-    const res = await fetch("/api/admin/models", {
+    const res = await authFetch("/api/admin/models", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: m.id, [field]: value }),
@@ -88,7 +95,7 @@ export default function AdminPage() {
   const saveModel = async (m: AIModel) => {
     const edit = editing[m.id];
     if (!edit) return;
-    const res = await fetch("/api/admin/models", {
+    const res = await authFetch("/api/admin/models", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -112,7 +119,7 @@ export default function AdminPage() {
       toast({ title: "key 和 name 必填", variant: "destructive" });
       return;
     }
-    const res = await fetch("/api/admin/models", {
+    const res = await authFetch("/api/admin/models", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newModel),

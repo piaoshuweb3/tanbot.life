@@ -9,6 +9,7 @@ import {
 import { SiteHeader } from "@/components/site/site-header";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { authFetch, getToken, clearToken } from "@/lib/auth-client";
 
 interface DashboardData {
   user: {
@@ -65,11 +66,17 @@ export default function DashboardPage() {
   useEffect(() => {
     if (redirectedRef.current) return;
     let cancelled = false;
-    fetch("/api/dashboard", { cache: "no-store", credentials: "same-origin" })
+
+    // 客户端预检：无 token 直接跳登录（无需等待网络请求）
+    if (!getToken()) {
+      redirectedRef.current = true;
+      window.location.replace("/login");
+      return;
+    }
+
+    authFetch("/api/dashboard")
       .then(async (r) => {
-        if (r.status === 401) {
-          throw new Error("UNAUTHORIZED");
-        }
+        if (r.status === 401) throw new Error("UNAUTHORIZED");
         if (!r.ok) throw new Error("请求失败");
         return r.json();
       })
@@ -82,10 +89,8 @@ export default function DashboardPage() {
         if (cancelled || redirectedRef.current) return;
         if (err.message === "UNAUTHORIZED") {
           redirectedRef.current = true;
-          // 用 replace 避免后退循环，加少量延迟让 cookie 稳定
-          setTimeout(() => {
-            window.location.replace("/login");
-          }, 100);
+          clearToken();
+          window.location.replace("/login");
         }
       })
       .finally(() => {
@@ -97,9 +102,10 @@ export default function DashboardPage() {
   }, []);
 
   const logout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
+    await authFetch("/api/auth/logout", { method: "POST" });
+    clearToken();
     toast({ title: "已退出登录" });
-    router.push("/login");
+    window.location.replace("/login");
   };
 
   if (loading || !data) {

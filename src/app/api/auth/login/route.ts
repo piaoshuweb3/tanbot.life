@@ -72,7 +72,10 @@ export async function POST(req: Request) {
       role: manager.role,
     };
 
-    const res = NextResponse.json({ ok: true, data: { user } });
+    // 同时通过 cookie 与 response body 返回 token，
+    // 客户端存 localStorage 并在后续请求带 Authorization header，
+    // 确保跨域/网关代理环境（cookie 可能丢失）下也能稳定鉴权。
+    const res = NextResponse.json({ ok: true, data: { user, token } });
     res.cookies.set(SESSION_COOKIE, token, {
       httpOnly: true,
       secure: false,
@@ -143,6 +146,7 @@ export async function PUT(req: Request) {
           creditScore: manager.creditScore,
           role: manager.role,
         },
+        token,
       },
     });
     res.cookies.set(SESSION_COOKIE, token, {

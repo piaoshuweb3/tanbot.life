@@ -15,12 +15,26 @@ export interface SessionUser {
 }
 
 /**
- * 从请求 cookie 中获取当前登录主理人（服务端用）。
+ * 从请求中获取当前登录主理人（服务端用）。
+ * 同时支持 cookie 与 Authorization: Bearer <token> 两种方式，
+ * 确保跨域/网关代理环境下也能稳定鉴权。
  */
 export async function getCurrentUser(): Promise<SessionUser | null> {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get(SESSION_COOKIE)?.value;
+    let token: string | undefined;
+
+    // 1. 优先从 Authorization header 读取（跨域友好）
+    const authHeader = await getAuthHeader();
+    if (authHeader?.startsWith("Bearer ")) {
+      token = authHeader.slice(7).trim();
+    }
+
+    // 2. 回退到 cookie
+    if (!token) {
+      const cookieStore = await cookies();
+      token = cookieStore.get(SESSION_COOKIE)?.value;
+    }
+
     if (!token) return null;
 
     const session = await db.session.findUnique({
@@ -46,6 +60,19 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
       role: m.role,
       status: m.status,
     };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * 从 headers() 读取 Authorization（兼容 Next.js 16 异步 headers）。
+ */
+async function getAuthHeader(): Promise<string | null> {
+  try {
+    const { headers } = await import("next/headers");
+    const h = await headers();
+    return h.get("authorization");
   } catch {
     return null;
   }

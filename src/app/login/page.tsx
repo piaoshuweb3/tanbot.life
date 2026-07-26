@@ -6,6 +6,7 @@ import { Flame, User, Lock, Phone, MessageCircle, Loader2, ArrowLeft, Sparkles }
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { setToken } from "@/lib/auth-client";
 
 type Method = "username" | "phone" | "wechat";
 
@@ -44,6 +45,8 @@ export default function LoginPage() {
       });
       const json = await res.json().catch(() => ({ ok: false, error: "服务器响应异常" }));
       if (!json.ok) throw new Error(json.error || "登录失败");
+      // 存储 token 到 localStorage，跨域环境下通过 Authorization header 鉴权
+      if (json.data.token) setToken(json.data.token);
       toast({
         title: "登录成功",
         description: `欢迎回来，${json.data.user.realName || json.data.user.username}`,
@@ -81,6 +84,7 @@ export default function LoginPage() {
       });
       const json = await res.json().catch(() => ({ ok: false, error: "服务器响应异常" }));
       if (!json.ok) throw new Error(json.error || "注册失败");
+      if (json.data.token) setToken(json.data.token);
       toast({ title: "注册成功", description: "已自动登录" });
       setTimeout(() => {
         window.location.replace("/dashboard");
