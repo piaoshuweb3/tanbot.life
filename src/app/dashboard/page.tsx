@@ -62,18 +62,32 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
     fetch("/api/dashboard")
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("未登录"))))
+      .then(async (r) => {
+        if (!r.ok) {
+          throw new Error(r.status === 401 ? "未登录" : "请求失败");
+        }
+        return r.json();
+      })
       .then((json) => {
-        if (!json.ok) throw new Error(json.error);
+        if (cancelled) return;
+        if (!json.ok) throw new Error(json.error || "加载失败");
         setData(json.data);
       })
-      .catch(() => {
-        toast({ title: "请先登录", variant: "destructive" });
-        router.push("/login");
+      .catch((err) => {
+        if (cancelled) return;
+        if (err.message === "未登录") {
+          router.replace("/login");
+        }
       })
-      .finally(() => setLoading(false));
-  }, [router, toast]);
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [router]);
 
   const logout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });

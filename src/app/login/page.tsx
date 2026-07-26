@@ -26,28 +26,36 @@ export default function LoginPage() {
     try {
       const payload: Record<string, string> = { method };
       if (method === "username") {
-        payload.username = form.username;
+        payload.username = form.username.trim();
         payload.password = form.password;
       } else if (method === "phone") {
-        payload.phone = form.phone;
-        payload.code = form.code;
+        if (!form.phone.trim()) {
+          toast({ title: "请输入手机号", variant: "destructive" });
+          setLoading(false);
+          return;
+        }
+        payload.phone = form.phone.trim();
+        payload.code = form.code.trim();
       }
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const json = await res.json();
-      if (!json.ok) throw new Error(json.error);
-      toast({ title: "登录成功", description: `欢迎回来，${json.data.user.realName || json.data.user.username}` });
-      router.push("/dashboard");
+      const json = await res.json().catch(() => ({ ok: false, error: "服务器响应异常" }));
+      if (!json.ok) throw new Error(json.error || "登录失败");
+      toast({
+        title: "登录成功",
+        description: `欢迎回来，${json.data.user.realName || json.data.user.username}`,
+      });
+      // 等待 cookie 写入后再跳转，避免 dashboard 首次 fetch 401
+      setTimeout(() => router.replace("/dashboard"), 300);
     } catch (e) {
       toast({
         title: "登录失败",
         description: e instanceof Error ? e.message : "未知错误",
         variant: "destructive",
       });
-    } finally {
       setLoading(false);
     }
   };
@@ -55,26 +63,30 @@ export default function LoginPage() {
   const register = async () => {
     setLoading(true);
     try {
+      if (!form.phone.trim()) {
+        toast({ title: "请输入手机号", variant: "destructive" });
+        setLoading(false);
+        return;
+      }
       const res = await fetch("/api/auth/login", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          phone: form.phone,
-          code: form.code,
+          phone: form.phone.trim(),
+          code: form.code.trim(),
           password: form.password || "123456",
         }),
       });
-      const json = await res.json();
-      if (!json.ok) throw new Error(json.error);
+      const json = await res.json().catch(() => ({ ok: false, error: "服务器响应异常" }));
+      if (!json.ok) throw new Error(json.error || "注册失败");
       toast({ title: "注册成功", description: "已自动登录" });
-      router.push("/dashboard");
+      setTimeout(() => router.replace("/dashboard"), 300);
     } catch (e) {
       toast({
         title: "注册失败",
         description: e instanceof Error ? e.message : "未知错误",
         variant: "destructive",
       });
-    } finally {
       setLoading(false);
     }
   };

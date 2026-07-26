@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     title: "纪录片 · 飘叔的烟火之路 · 烟火节点 TANBOT",
     description: "记录飘叔三十年人生与烟火节点创业历程的纪录片系列。",
     url: "https://tanbot.life/documentary",
-    type: "video.series",
+    type: "website",
   },
 };
 
