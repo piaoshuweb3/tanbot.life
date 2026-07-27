@@ -6,24 +6,23 @@ import { EmberField } from "@/components/site/ember-field";
 import { CampfireFlame } from "@/components/site/campfire-flame";
 
 function LiveTicker() {
-  // 模拟"作战指挥室"实时数据条
+  // 实时数据条 —— 每条独立滚动，不再重复
   const items = [
-    "全网今日总营收 ¥ 1,284,560",
-    "在线节点 312 / 486",
-    "平均毛利率 68.4%",
-    "今日新增主理人 7 人",
-    "创始主理人名额 剩余 63 / 100",
-    "AI 选址罗盘今日调用 1,942 次",
-    "异常预警 2 起",
-    "飘叔公道 · 烤串毛肚 全国热销 NO.1",
+    { text: "全网今日总营收 ¥ 1,284,560", color: "jade" },
+    { text: "在线节点 312 / 486", color: "gold" },
+    { text: "平均毛利率 68.4%", color: "jade" },
+    { text: "今日新增主理人 7 人", color: "gold" },
+    { text: "创始主理人名额 剩余 63/100", color: "jade" },
+    { text: "AI 选址罗盘今日调用 1,942 次", color: "gold" },
+    { text: "飘叔公道 · 烤串毛肚 全国热销 NO.1", color: "jade" },
   ];
   return (
     <div className="relative overflow-hidden border-b border-gold/15 bg-ink-2/80 py-3">
-      <div className="flex w-max animate-ticker gap-12 whitespace-nowrap">
-        {[...items, ...items].map((t, i) => (
+      <div className="flex w-max animate-ticker gap-16 whitespace-nowrap">
+        {items.map((t, i) => (
           <span key={i} className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span className="h-1.5 w-1.5 rounded-full bg-jade animate-pulse" />
-            {t}
+            <span className={`h-1.5 w-1.5 rounded-full ${t.color === "jade" ? "bg-jade" : "bg-gold"} animate-pulse`} />
+            {t.text}
           </span>
         ))}
       </div>

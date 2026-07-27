@@ -99,14 +99,14 @@ export function SiteFooter() {
 
           <div className="flex flex-wrap items-center gap-2">
             {[
-              { icon: Rss, label: "Reddit", href: "https://www.reddit.com/r/tanbot", color: "#FF4500" },
               { icon: MessageCircle, label: "QQ 群", href: "https://qm.qq.com/q/tanbot", color: "#12B7F5" },
               { icon: MessagesSquare, label: "企业微信群", href: "https://work.weixin.qq.com/tanbot", color: "#07C160" },
-              { icon: Send, label: "Telegram Bot", href: "https://t.me/tanbot_life_bot", color: "#26A5E4" },
               { icon: MessageCircle, label: "微信公众号", href: "#", color: "#07C160" },
-              { icon: Globe, label: "tanbot.life", href: "https://tanbot.life", color: "#FF6B35" },
               { icon: Mail, label: "联系飘叔", href: "mailto:piaoshu@tanbot.life", color: "#FF6B35" },
               { icon: Github, label: "GitHub", href: "https://github.com/piaoshuweb3/tanbot.life", color: "#f5f5f5" },
+              { icon: Globe, label: "tanbot.life", href: "https://tanbot.life", color: "#FF6B35" },
+              { icon: Send, label: "海外", href: "https://t.me/tanbot_life_bot", color: "#26A5E4" },
+              { icon: Rss, label: "Reddit", href: "https://www.reddit.com/r/tanbot", color: "#FF4500" },
             ].map((l, i) => {
               const Icon = l.icon;
               return (

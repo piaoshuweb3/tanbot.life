@@ -29,14 +29,23 @@ export function RecruitSection() {
   const { toast } = useToast();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [city, setCity] = useState("");
+  const [experience, setExperience] = useState("");
+  const [budget, setBudget] = useState("");
+  const [timeslot, setTimeslot] = useState("");
   const [intent, setIntent] = useState("");
+  const [agreed, setAgreed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !phone.trim()) {
-      toast({ title: "请填写姓名与联系方式", variant: "destructive" });
+    if (!name.trim() || !phone.trim() || !city.trim()) {
+      toast({ title: "请至少填写姓名、联系方式和所在城市", variant: "destructive" });
+      return;
+    }
+    if (!agreed) {
+      toast({ title: "请先认同烟火节点价值观", variant: "destructive" });
       return;
     }
     setSubmitting(true);
@@ -125,35 +134,106 @@ export function RecruitSection() {
                 <form onSubmit={submit} className="space-y-4">
                   <h4 className="font-display text-xl font-bold text-text-main">提交加入申请</h4>
                   <p className="text-xs text-muted-foreground">
-                    认同价值观 · 具备 1.5-2 万启动资金 · 完全民事行为能力
+                    认同价值观 · 具备启动资金 · 完全民事行为能力
                   </p>
-                  <div>
-                    <label className="mb-1.5 block text-xs text-muted-foreground">姓名</label>
-                    <Input
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="你的称呼"
-                      className="border-gold/20 bg-ink/60 text-text-main"
-                    />
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div>
+                      <label className="mb-1 block text-[11px] text-muted-foreground">
+                        姓名 <span className="text-gold">*</span>
+                      </label>
+                      <Input
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="你的称呼"
+                        className="border-gold/20 bg-ink/60 text-text-main h-9 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-[11px] text-muted-foreground">
+                        联系方式 <span className="text-gold">*</span>
+                      </label>
+                      <Input
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="手机号 / 微信"
+                        className="border-gold/20 bg-ink/60 text-text-main h-9 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-[11px] text-muted-foreground">
+                        所在城市 <span className="text-gold">*</span>
+                      </label>
+                      <Input
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                        placeholder="如 上海·徐汇"
+                        className="border-gold/20 bg-ink/60 text-text-main h-9 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-[11px] text-muted-foreground">餐饮/摆摊经验</label>
+                      <select
+                        value={experience}
+                        onChange={(e) => setExperience(e.target.value)}
+                        className="w-full h-9 rounded-md border border-gold/20 bg-ink/60 px-3 text-sm text-text-main"
+                      >
+                        <option value="">请选择</option>
+                        <option value="none">无经验</option>
+                        <option value="family">帮家人做过</option>
+                        <option value="part">兼职摆过摊</option>
+                        <option value="full">全职餐饮经验</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-[11px] text-muted-foreground">可投入资金</label>
+                      <select
+                        value={budget}
+                        onChange={(e) => setBudget(e.target.value)}
+                        className="w-full h-9 rounded-md border border-gold/20 bg-ink/60 px-3 text-sm text-text-main"
+                      >
+                        <option value="">请选择</option>
+                        <option value="1.5">1.5-2 万元（推荐）</option>
+                        <option value="2-3">2-3 万元</option>
+                        <option value="3+">3 万元以上</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-[11px] text-muted-foreground">可出摊时段</label>
+                      <select
+                        value={timeslot}
+                        onChange={(e) => setTimeslot(e.target.value)}
+                        className="w-full h-9 rounded-md border border-gold/20 bg-ink/60 px-3 text-sm text-text-main"
+                      >
+                        <option value="">请选择</option>
+                        <option value="evening">下午到凌晨（16-01）</option>
+                        <option value="night">仅晚间（18-23）</option>
+                        <option value="full">全天可出</option>
+                      </select>
+                    </div>
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-xs text-muted-foreground">联系方式</label>
-                    <Input
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="手机号 / 微信"
-                      className="border-gold/20 bg-ink/60 text-text-main"
-                    />
-                  </div>
-                  <div>
-                    <label className="mb-1.5 block text-xs text-muted-foreground">创业意向（选填）</label>
+                    <label className="mb-1 block text-[11px] text-muted-foreground">想对飘叔说的话（选填）</label>
                     <Textarea
                       value={intent}
                       onChange={(e) => setIntent(e.target.value)}
-                      placeholder="你所在城市、想做的品类、或想说给飘叔的话"
+                      placeholder="你的故事、困惑、想做的品类、或为什么要加入……"
                       rows={3}
                       className="resize-none border-gold/20 bg-ink/60 text-text-main"
                     />
+                  </div>
+                  {/* 价值观认同 */}
+                  <div className="rounded-lg border border-gold/15 bg-ink/50 p-3">
+                    <label className="flex cursor-pointer items-start gap-2.5">
+                      <input
+                        type="checkbox"
+                        checked={agreed}
+                        onChange={(e) => setAgreed(e.target.checked)}
+                        className="mt-0.5 h-4 w-4 accent-gold"
+                      />
+                      <span className="text-[11px] leading-relaxed text-muted-foreground">
+                        我认同「行为即契约 · 记忆即永生 · 共性才是通往神性的路」三大信仰，愿意靠劳动赚钱、诚信经营、每日上传经营数据。
+                      </span>
+                    </label>
                   </div>
                   <Button
                     type="submit"

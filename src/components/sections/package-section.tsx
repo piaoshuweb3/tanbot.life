@@ -8,6 +8,7 @@ const PACKAGES = [
     code: "A",
     name: "虹桥小聚",
     scene: "2 人尝鲜",
+    price: "¥68-88",
     icon: Users,
     content: ["20 串招牌", "2 份烤蔬", "2 杯饮品"],
     accent: "gold",
@@ -17,6 +18,7 @@ const PACKAGES = [
     code: "B",
     name: "汴河夜话",
     scene: "3-4 人主力",
+    price: "¥128-168",
     icon: Moon,
     content: ["40 串混合", "烤鱼", "4 杯饮品", "小菜"],
     accent: "indigo",
@@ -26,6 +28,7 @@ const PACKAGES = [
     code: "C",
     name: "孙羊正席",
     scene: "5-6 人聚餐",
+    price: "¥228-298",
     icon: UtensilsCrossed,
     content: ["60 串精选", "烤羊排", "烤鱼", "6 杯饮品", "主食"],
     accent: "ember",
@@ -35,6 +38,7 @@ const PACKAGES = [
     code: "D",
     name: "贩夫收摊",
     scene: "单人深夜食",
+    price: "¥28-38",
     icon: Moon,
     content: ["10 串招牌", "烤饼", "1 杯饮品"],
     accent: "rice",
@@ -124,7 +128,13 @@ export function PackageSection() {
                   ))}
                 </ul>
 
-                <p className="relative mt-4 text-xs leading-relaxed text-muted-foreground">
+                {/* 价格 */}
+                <div className="relative mt-3 flex items-baseline gap-1">
+                  <span className="tnum font-display text-xl font-black gold-text">{p.price}</span>
+                  <span className="text-[10px] text-muted-foreground">/ 建议零售价</span>
+                </div>
+
+                <p className="relative mt-3 text-xs leading-relaxed text-muted-foreground">
                   {p.desc}
                 </p>
               </div>

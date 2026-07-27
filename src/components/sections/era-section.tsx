@@ -59,8 +59,10 @@ export function EraSection() {
   const [active, setActive] = useState(false);
 
   useEffect(() => {
+    // 双重激活保障：IntersectionObserver + 300ms 延迟兜底
     const el = ref.current;
-    if (!el) return;
+    const t = setTimeout(() => setActive(true), 300);
+    if (!el) return () => clearTimeout(t);
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -68,10 +70,10 @@ export function EraSection() {
           io.disconnect();
         }
       },
-      { threshold: 0.25 }
+      { threshold: 0.08 }
     );
     io.observe(el);
-    return () => io.disconnect();
+    return () => { io.disconnect(); clearTimeout(t); };
   }, []);
 
   return (
