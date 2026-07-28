@@ -169,6 +169,12 @@ const orgJsonLd = {
     "个体劳动解放",
     "清明上河文化",
   ],
+  sameAs: [
+    "https://github.com/piaoshuweb3/tanbot.life",
+    "https://tanbot.life",
+    "https://qm.qq.com/q/tanbot",
+    "https://work.weixin.qq.com/tanbot",
+  ],
 };
 
 // JSON-LD —— WebSite + SearchAction
@@ -202,7 +208,7 @@ const serviceJsonLd = {
   },
 };
 
-// JSON-LD —— FAQPage (GEO 友好，LLM 常引用 FAQ)
+// JSON-LD —— FAQPage (8 个高频问答 · GEO/LLM 友好)
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -210,42 +216,42 @@ const faqJsonLd = {
     {
       "@type": "Question",
       name: "烟火节点是什么？",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "烟火节点（摊博 TANBOT）是一场以 AI 武装个体劳动者的解放运动，以地摊为起点、以 AI 为武器、以尊严为目标。它招募「街头主理人」，用 AI 选址罗盘、智能巡店官、经营参谋赋能每一个地摊节点。",
-      },
+      acceptedAnswer: { "@type": "Answer", text: "烟火节点（摊博 TANBOT）是一场以 AI 武装个体劳动者的解放运动，以地摊为起点、以 AI 为武器、以尊严为目标。它招募「街头主理人」，用 AI 选址罗盘、智能巡店官、经营参谋、智能客服、套餐工坊五个 AI 助手赋能每一个地摊节点。" },
     },
     {
       "@type": "Question",
       name: "加入烟火节点需要多少投入？",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "总投入控制在 1.5-2 万元，包含 1 万元数字会员年费和数千元实物装备投入。平台不碰货、不赚差价，你赚的每一分钱都是你自己的。前 100 名创始主理人首年年费减免至 5000 元。",
-      },
+      acceptedAnswer: { "@type": "Answer", text: "总投入控制在 1.5-2 万元，包含 1 万元数字会员年费和数千元实物装备。平台不碰货、不赚差价，利润 100% 归主理人。前 100 名创始主理人首年年费减免至 ¥5,000。" },
+    },
+    {
+      "@type": "Question",
+      name: "没有餐饮经验能做好吗？",
+      acceptedAnswer: { "@type": "Answer", text: "完全可以。SOP 已将一切流程标准化：预制分装 + 固定套餐 + 三分钟出餐。AI 选址罗盘告诉你明天去哪卖，AI 巡店官每天检查出品质量，AI 经营参谋每天给你赚钱报告。只需认真执行即可。" },
+    },
+    {
+      "@type": "Question",
+      name: "严格按 SOP 做还是不赚钱怎么办？",
+      acceptedAnswer: { "@type": "Answer", text: "坚持「风险共担」原则。严格按标准执行且每日上传数据，但 30 天后日均营收仍未达到预期，依协议退还大部分甚至全部会员费。平台和主理人站在同一边。" },
+    },
+    {
+      "@type": "Question",
+      name: "什么人不适合加入？",
+      acceptedAnswer: { "@type": "Answer", text: "想赚快钱的、不想遵守 SOP 的、不愿每天上传数据的、不认同「行为即契约」价值观的。烟火节点寻找的是伙伴和战士，不是投机者。" },
+    },
+    {
+      "@type": "Question",
+      name: "为什么信任飘叔？",
+      acceptedAnswer: { "@type": "Answer", text: "飘叔三十年走过从日本精英白领到负债三千多万、锒铛入狱再到街头重新站起的完整旅程。烟火节点不是资本催生的项目，是一个老兵用血泪教训和 AI 技术建的系统——帮普通人不必再被命运随意践踏。" },
     },
     {
       "@type": "Question",
       name: "AI 智能巡店官如何工作？",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "主理人每日上传规定角度的出品照片，AI 视觉模型自动比对标准图库，从烤色、摆盘、分量、品牌标识、卫生五个维度打分。不达标时自动推送 SOP 纠正视频，评分关联节点信用分与续约资格。",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "「飘叔公道」对联是什么？",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "品牌道统对联：上联「清明上河凡心暖」，下联「飘叔公道串烤香」，横批「飘叔公道」。十四字是品牌道统，不再动。「清明上河」是中国人共同的市井记忆，「凡心暖」是普通人的心被炭火焐热，「飘叔公道」是品牌名，「串烤香」是产品本身。",
-      },
+      acceptedAnswer: { "@type": "Answer", text: "主理人每日上传规定角度的出品照片，AI 视觉模型自动比对标准图库，从烤色、摆盘、分量、品牌标识、卫生五个维度打分。不达标时自动推送 SOP 纠正视频，评分关联节点信用分与续约资格。" },
     },
     {
       "@type": "Question",
       name: "月收入能有多少？",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "目标是普通人通过每天下午4点到凌晨1点的努力，一个月内覆盖所有投入，此后十个月全是利润。月纯收入 1-1.5 万人民币是完全可以实现的目标。严格按 SOP 经营但 30 天未达预期，依协议退还大部分会员费。",
-      },
+      acceptedAnswer: { "@type": "Answer", text: "目标是普通人通过每天下午4点到凌晨1点的努力，一个月内覆盖所有投入，此后十个月全是利润。月纯收入 1-1.5 万人民币是完全可实现的目标。" },
     },
   ],
 };
@@ -256,8 +262,10 @@ const breadcrumbJsonLd = {
   "@type": "BreadcrumbList",
   itemListElement: [
     { "@type": "ListItem", position: 1, name: "首页", item: SITE_URL },
-    { "@type": "ListItem", position: 2, name: "关于我", item: `${SITE_URL}/about` },
+    { "@type": "ListItem", position: 2, name: "关于我 · 飘叔宣言", item: `${SITE_URL}/about` },
     { "@type": "ListItem", position: 3, name: "AI 智能巡店官", item: `${SITE_URL}/inspect` },
+    { "@type": "ListItem", position: 4, name: "AI 套餐工坊", item: `${SITE_URL}/packages` },
+    { "@type": "ListItem", position: 5, name: "纪录片", item: `${SITE_URL}/documentary` },
   ],
 };
 
