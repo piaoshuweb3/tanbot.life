@@ -2,24 +2,30 @@
 
 import { useEffect, useState } from "react";
 import { Menu, X, Flame } from "lucide-react";
+import { usePathname } from "next/navigation";
 
-const NAV = [
-  { href: "#soul", label: "品牌灵魂", external: false },
-  { href: "/about", label: "关于我", external: true },
-  { href: "#era", label: "时代", external: false },
-  { href: "#ai", label: "AI 系统", external: false },
-  { href: "/inspect", label: "AI 巡店", external: true },
-  { href: "/packages", label: "套餐工坊", external: true },
-  { href: "/chat", label: "智能客服", external: true },
-  { href: "/documentary", label: "纪录片", external: true },
-  { href: "#packages", label: "套餐", external: false },
-  { href: "#asset", label: "品牌资产", external: false },
-  { href: "#join", label: "加入", external: false },
+const HOME_ANCHORS = [
+  { href: "#soul", label: "品牌灵魂" },
+  { href: "#era", label: "时代" },
+  { href: "#ai", label: "AI 系统" },
+  { href: "#packages", label: "套餐" },
+  { href: "#asset", label: "品牌资产" },
+  { href: "#join", label: "加入" },
+];
+
+const GLOBAL_LINKS = [
+  { href: "/about", label: "关于我" },
+  { href: "/inspect", label: "AI 巡店" },
+  { href: "/packages", label: "套餐工坊" },
+  { href: "/chat", label: "智能客服" },
+  { href: "/documentary", label: "纪录片" },
 ];
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -55,7 +61,16 @@ export function SiteHeader() {
 
         {/* Desktop nav (lg 以上显示全部，md 显示精简) */}
         <nav className="hidden items-center gap-0.5 lg:flex">
-          {NAV.map((item) => (
+          {isHome && HOME_ANCHORS.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="rounded-md px-2.5 py-1.5 text-[13px] font-medium text-muted-foreground transition-colors duration-100 hover:text-gold"
+            >
+              {item.label}
+            </a>
+          ))}
+          {GLOBAL_LINKS.map((item) => (
             <a
               key={item.href}
               href={item.href}
@@ -94,7 +109,17 @@ export function SiteHeader() {
       {open && (
         <div className="border-t border-gold/15 bg-ink/95 backdrop-blur-xl lg:hidden">
           <nav className="mx-auto grid max-w-7xl grid-cols-2 gap-1 px-4 py-3 sm:grid-cols-3">
-            {NAV.map((item) => (
+            {isHome && HOME_ANCHORS.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-ink-3 hover:text-gold"
+              >
+                {item.label}
+              </a>
+            ))}
+            {GLOBAL_LINKS.map((item) => (
               <a
                 key={item.href}
                 href={item.href}

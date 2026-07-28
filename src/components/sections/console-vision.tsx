@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Scroll, ShieldCheck, Flame, Boxes } from "lucide-react";
 
 // 数字清明上河图上的"节点灯"坐标
@@ -168,6 +169,35 @@ export function ConsoleVision() {
         </div>
 
         {/* 智能烤炉 */}
+        <OvenTimer />
+      </div>
+    </div>
+  );
+}
+
+function OvenTimer() {
+  const [timeLeft, setTimeLeft] = useState(92); // 01:32 = 92s
+  const [progress, setProgress] = useState(0);
+  const total = 180; // 总烤制 3 分钟
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 0) return total;
+        return prev - 1;
+      });
+      setProgress((prev) => {
+        if (prev >= 100) return 0;
+        return prev + 100 / total;
+      });
+    }, 1000);
+    return () => clearInterval(t);
+  }, []);
+
+  const min = Math.floor(timeLeft / 60);
+  const sec = timeLeft % 60;
+
+  return (
         <div className="relative overflow-hidden rounded-2xl border border-gold/30 bg-gradient-to-br from-ink-2 to-ink p-6">
           <div className="absolute inset-0 radial-ember opacity-40" />
           <div className="relative">
@@ -185,7 +215,7 @@ export function ConsoleVision() {
               </div>
             </div>
 
-            {/* 烤炉视觉 */}
+                {/* 烤炉视觉 */}
             <div className="mt-5 flex items-center justify-center gap-6 rounded-md border border-gold/15 bg-ink/60 p-5">
               <div className="text-center">
                 {/* 旋钮 */}
@@ -201,12 +231,20 @@ export function ConsoleVision() {
                 {/* 小屏 */}
                 <div className="flex h-16 w-24 flex-col items-center justify-center rounded-md border border-gold/30 bg-ink">
                   <span className="tnum font-mono text-lg font-bold text-gold">
-                    01:32
+                    {String(min).padStart(2, "0")}:{String(sec).padStart(2, "0")}
                   </span>
                   <span className="text-[8px] text-muted-foreground">剩余时间</span>
                 </div>
                 <p className="mt-2 text-[10px] text-muted-foreground">烤制进度</p>
               </div>
+            </div>
+
+            {/* 进度条 */}
+            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-ink-2">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-ember to-gold transition-all duration-1000"
+                style={{ width: `${Math.round(progress)}%` }}
+              />
             </div>
 
             <p className="relative mt-4 text-[11px] leading-relaxed text-muted-foreground">
@@ -215,7 +253,5 @@ export function ConsoleVision() {
             </p>
           </div>
         </div>
-      </div>
-    </div>
   );
 }
