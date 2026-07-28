@@ -364,9 +364,9 @@ export default function DashboardPage() {
                     <span className="text-gold">→</span>
                   </a>
                   {user.role === "admin" && (
-                    <a href="/admin" className="flex items-center justify-between rounded-lg border border-indigo/30 bg-indigo/5 p-3 transition-colors hover:border-indigo/60">
+                    <a href="/admin" className="flex items-center justify-between rounded-lg border border-indigo/40 bg-indigo/5 p-3 transition-colors hover:border-indigo/60 hover:gold-glow">
                       <span className="flex items-center gap-2 text-sm text-text-soft">
-                        <ShieldCheck className="h-4 w-4 text-indigo-soft" /> 总管理后台 · AI 模型配置
+                        <ShieldCheck className="h-4 w-4 text-indigo-soft" /> 系统设置 · AI 模型
                       </span>
                       <span className="text-indigo-soft">→</span>
                     </a>

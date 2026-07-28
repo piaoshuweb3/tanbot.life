@@ -144,6 +144,25 @@ export default function AdminPage() {
   const enabledCount = models.filter((m) => m.enabled).length;
   const freeCount = models.filter((m) => m.category === "free").length;
   const defaultModel = models.find((m) => m.isDefault);
+  const isEmpty = models.length === 0;
+
+  const initSetup = async () => {
+    setLoading(true);
+    try {
+      const res = await authFetch("/api/setup");
+      const json = await res.json();
+      if (json.ok) {
+        toast({ title: "初始化完成", description: `已创建 ${json.results?.length || 0} 项数据` });
+        load();
+      } else {
+        toast({ title: "初始化失败", description: json.error, variant: "destructive" });
+        setLoading(false);
+      }
+    } catch {
+      toast({ title: "网络异常", variant: "destructive" });
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col bg-ink">
@@ -170,6 +189,25 @@ export default function AdminPage() {
               subtitle="配置 API 接口调用的模型来源。支持 9 种主流大模型，包括付费与免费，可启用、设默认、配置密钥与优先级。"
             />
 
+            {/* 空状态 · 未初始化 */}
+            {isEmpty ? (
+              <div className="reveal mx-auto mt-10 max-w-3xl">
+                <div className="glass-card rounded-2xl p-10 text-center">
+                  <ShieldCheck className="mx-auto h-12 w-12 text-yellow-400" />
+                  <h3 className="mt-4 font-display text-xl font-bold text-rice">数据库未初始化</h3>
+                  <p className="mt-2 max-w-md mx-auto text-sm text-muted-foreground">
+                    AI 模型配置和测试数据尚未加载。点击下方按钮一键初始化（含 9 个 AI 模型 + 测试主理人）。
+                  </p>
+                  <Button onClick={initSetup} className="mt-6 bg-gold text-ink hover:bg-gold-bright hover:gold-glow">
+                    <Flame className="mr-2 h-4 w-4" /> 一键初始化系统
+                  </Button>
+                  <p className="mt-3 text-[11px] text-muted-foreground">
+                    也可以访问 /api/setup 手动触发
+                  </p>
+                </div>
+              </div>
+            ) : (
+            <>
             {/* 统计 */}
             <div className="reveal mx-auto mt-10 grid max-w-3xl grid-cols-3 gap-4">
               <div className="glass-card rounded-xl p-5 text-center">
@@ -357,6 +395,8 @@ export default function AdminPage() {
                 </div>
               </div>
             </div>
+          </>
+          )}
           </div>
         </section>
       </main>
