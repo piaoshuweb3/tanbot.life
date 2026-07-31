@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu, X, Flame } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 const HOME_ANCHORS = [
@@ -46,10 +46,11 @@ export function SiteHeader() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <a href="#top" className="group flex items-center gap-2.5">
-          <span className="relative flex h-9 w-9 items-center justify-center rounded-md border border-gold/40 bg-ink-2">
-            <Flame className="h-5 w-5 text-gold transition-transform group-hover:scale-110" />
-            <span className="absolute inset-0 rounded-md bg-gold/10 blur-md" />
-          </span>
+          <img
+            src="/images/logo.png"
+            alt="烟火节点 TANBOT.LIFE"
+            className="h-9 w-auto rounded-md border border-gold/25 object-contain transition-all duration-200 group-hover:border-gold/60 md:h-10"
+          />
           <div className="flex flex-col leading-none">
             <span className="font-display text-base font-black tracking-wide text-text-main">
               烟火节点

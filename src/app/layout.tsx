@@ -98,10 +98,10 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg", type: "image/svg+xml" },
+      { url: "/images/logo-icon-64.png", type: "image/png", sizes: "64x64" },
+      { url: "/images/logo-icon-512.png", type: "image/png", sizes: "512x512" },
     ],
-    apple: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
+    apple: "/images/apple-touch-icon.png",
   },
   manifest: "/site.webmanifest",
   openGraph: {

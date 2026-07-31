@@ -9,10 +9,15 @@
   "lang": "zh-CN",
   "icons": [
     {
-      "src": "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/images/logo-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "/images/logo-icon-64.png",
+      "sizes": "64x64",
+      "type": "image/png"
     }
   ]
 }

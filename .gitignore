@@ -55,3 +55,6 @@ server.log
 # local sqlite db
 /db/
 /prisma/migrations/
+
+# scratch
+.cowork-temp/
