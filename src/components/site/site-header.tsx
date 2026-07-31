@@ -8,17 +8,18 @@ const HOME_ANCHORS = [
   { href: "#soul", label: "品牌灵魂" },
   { href: "#era", label: "时代" },
   { href: "#ai", label: "AI 系统" },
-  { href: "#packages", label: "套餐" },
   { href: "#asset", label: "品牌资产" },
-  { href: "#join", label: "加入" },
 ];
 
 const GLOBAL_LINKS = [
   { href: "/about", label: "关于我" },
+  { href: "/nft", label: "NFT 节点" },
+  { href: "/partner", label: "城市合伙人" },
+  { href: "/whitepaper", label: "白皮书" },
+  { href: "/documentary", label: "纪录片" },
   { href: "/inspect", label: "AI 巡店" },
   { href: "/packages", label: "套餐工坊" },
   { href: "/chat", label: "智能客服" },
-  { href: "/documentary", label: "纪录片" },
 ];
 
 export function SiteHeader() {

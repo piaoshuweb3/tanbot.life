@@ -14,6 +14,7 @@ import { BrandMatrixSection } from "@/components/sections/brand-matrix-section";
 import { RecruitSection } from "@/components/sections/recruit-section";
 import { CaseSection } from "@/components/sections/case-section";
 import { FaqSection } from "@/components/sections/faq-section";
+import { SystemEntrySection } from "@/components/sections/system-entry-section";
 import { SiteFooter } from "@/components/sections/site-footer";
 
 export default function Home() {
@@ -34,6 +35,7 @@ export default function Home() {
         <BrandMatrixSection />
         <CaseSection />
         <FaqSection />
+        <SystemEntrySection />
         <RecruitSection />
       </main>
       <SiteFooter />
