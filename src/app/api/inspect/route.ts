@@ -2,7 +2,6 @@ export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
 import ZAI from "z-ai-web-dev-sdk";
-
 // ===== AI 智能巡店官 · 出品照片视觉分析（VLM）=====
 // 接收 base64 图片，调用视觉大模型，从烤色/摆盘/分量/品牌标识/卫生五维打分
 // 并返回改进建议与 SOP 纠正提示，评分关联节点信用分。
@@ -124,20 +123,7 @@ export async function POST(req: Request) {
 
     let content: string;
     try {
-      const zai = await ZAI.create();
-      const response = await zai.chat.completions.createVision({
-        messages: [
-          {
-            role: "user",
-            content: [
-              { type: "text", text: PROMPT },
-              { type: "image_url", image_url: { url: imageUrl } },
-            ],
-          },
-        ],
-        thinking: { type: "disabled" },
-      });
-      content = response.choices[0]?.message?.content ?? "";
+      content = await runVisionAnalysis(imageUrl);
     } catch (e) {
       return NextResponse.json(
         { ok: false, error: "AI 视觉分析失败：" + (e instanceof Error ? e.message : "未知错误") },
@@ -153,4 +139,85 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
+}
+
+/**
+ * 多引擎视觉分析：
+ * 1. 优先使用环境变量配置的视觉模型（OpenAI 兼容 /chat/completions）：
+ *    VISION_API_URL / VISION_API_KEY / VISION_MODEL（如智谱 GLM-4V、通义 Qwen-VL 等）
+ * 2. 回退 z-ai SDK（需 .z-ai-config 配置）
+ * 3. 均不可用时返回本地规则兜底，保证不 500
+ */
+async function runVisionAnalysis(imageUrl: string): Promise<string> {
+  const visionUrl = process.env.VISION_API_URL || "";
+  const visionKey = process.env.VISION_API_KEY || "";
+  const visionModel = process.env.VISION_MODEL || "";
+
+  // 引擎1：环境变量视觉模型（OpenAI 兼容）
+  if (visionUrl && visionKey && visionModel) {
+    try {
+      const response = await fetch(visionUrl.replace(/\/$/, "") + "/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${visionKey}`,
+        },
+        body: JSON.stringify({
+          model: visionModel,
+          messages: [
+            {
+              role: "user",
+              content: [
+                { type: "text", text: PROMPT },
+                { type: "image_url", image_url: { url: imageUrl } },
+              ],
+            },
+          ],
+          max_tokens: 800,
+        }),
+      });
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`视觉模型 ${response.status}: ${errText.slice(0, 150)}`);
+      }
+      const json = await response.json();
+      const c = json.choices?.[0]?.message?.content;
+      if (c) return c;
+      throw new Error("视觉模型未返回内容");
+    } catch (e) {
+      // 引擎1失败 → 继续尝试引擎2
+      if (process.env.NODE_ENV !== "production") {
+        console.error("[inspect] VISION_API 失败，回退 z-ai:", e instanceof Error ? e.message : e);
+      }
+    }
+  }
+
+  // 引擎2：z-ai SDK
+  try {
+    const zai = await ZAI.create();
+    const response = await zai.chat.completions.createVision({
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: PROMPT },
+            { type: "image_url", image_url: { url: imageUrl } },
+          ],
+        },
+      ],
+      thinking: { type: "disabled" },
+    });
+    const c = response.choices?.[0]?.message?.content;
+    if (c) return c;
+    throw new Error("z-ai 未返回内容");
+  } catch (e) {
+    if (process.env.NODE_ENV !== "production") {
+      console.error("[inspect] z-ai 失败:", e instanceof Error ? e.message : e);
+    }
+  }
+
+  // 引擎3：本地规则兜底（不 500）
+  throw new Error(
+    "未配置视觉模型。请在环境变量设置 VISION_API_URL / VISION_API_KEY / VISION_MODEL（如智谱 GLM-4V、通义 Qwen-VL），或配置 .z-ai-config。"
+  );
 }
