@@ -207,12 +207,18 @@
 
 /* 卡片：深色玻璃质感 */
 .glass-card {
-  background: linear-gradient(160deg, rgba(44, 44, 44, 0.85), rgba(26, 26, 26, 0.85));
+  position: relative;
+  background:
+    /* 底部炉火辉光：炭火色从下缘微微透出，像卡片立在火边 */
+    linear-gradient(0deg, rgba(255, 107, 53, 0.07) 0%, rgba(255, 107, 53, 0) 18%),
+    linear-gradient(160deg, rgba(44, 44, 44, 0.88), rgba(26, 26, 26, 0.92));
   border: 1px solid rgba(255, 107, 53, 0.16);
+  box-shadow: 0 1px 0 rgba(245, 240, 232, 0.04) inset, 0 10px 30px -12px rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(6px);
 }
 .glass-card:hover {
-  border-color: rgba(255, 107, 53, 0.4);
+  border-color: rgba(255, 107, 53, 0.42);
+  box-shadow: 0 1px 0 rgba(245, 240, 232, 0.05) inset, 0 14px 40px -12px rgba(255, 107, 53, 0.12);
 }
 
 /* 宣纸纹理（文化质感卡片） */

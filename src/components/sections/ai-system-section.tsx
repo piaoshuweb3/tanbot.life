@@ -11,6 +11,7 @@ const AGENTS = [
     icon: Compass,
     name: "AI 选址罗盘",
     tag: "核心引擎",
+    status: { code: "compass.service", state: "RUNNING", ms: "42ms" },
     desc: "告诉你明天该去哪，预估能卖多少。",
     points: [
       "智能点位评估 · 0-100 综合评分",
@@ -25,6 +26,7 @@ const AGENTS = [
     icon: ScanLine,
     name: "AI 智能巡店官",
     tag: "品质守门人",
+    status: { code: "inspect.vlm", state: "ACTIVE", ms: "187ms" },
     desc: "比你自己还懂出品标准。",
     points: [
       "出品照片视觉比对 · 烤色/摆盘/分量",
@@ -38,6 +40,7 @@ const AGENTS = [
     icon: BarChart3,
     name: "AI 经营参谋",
     tag: "赚钱报告",
+    status: { code: "briefing.llm", state: "READY", ms: "1.2s" },
     desc: "每天一份专属经营简报。",
     points: [
       "每日营收分析与同区域对比",
@@ -51,6 +54,7 @@ const AGENTS = [
     icon: BotMessageSquare,
     name: "AI 智能客服",
     tag: "7×24 在线",
+    status: { code: "chat.stream", state: "LIVE", ms: "0.8s" },
     desc: "经营问题，AI 秒回。",
     points: [
       "基于实战手册的私有知识库",
@@ -64,6 +68,7 @@ const AGENTS = [
     icon: UtensilsCrossed,
     name: "AI 套餐工坊",
     tag: "利润中枢",
+    status: { code: "pkg.recommend", state: "READY", ms: "56ms" },
     desc: "连接参谋与巡店的核心中枢。",
     points: [
       "4 套餐制 · 杜绝零散 · 三分钟出餐",
@@ -130,6 +135,17 @@ export function AISystemSection() {
                       </li>
                     ))}
                   </ul>
+                  {/* 终端状态尾行 · AI 科技感 */}
+                  <div className="mt-5 flex items-center justify-between border-t border-white/5 pt-3 font-mono text-[10px] text-muted-foreground">
+                    <span className="flex items-center gap-1.5">
+                      <span className={`inline-block h-1.5 w-1.5 rounded-full ${a.accent === "jade" ? "bg-jade" : "bg-gold"} animate-pulse`} />
+                      {a.status?.code}
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <span className="text-gold/60">{a.status?.state}</span>
+                      <span>{a.status?.ms}</span>
+                    </span>
+                  </div>
                 </div>
               </div>
             );
