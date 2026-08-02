@@ -1,17 +1,59 @@
 /**
- * LLM 引擎 —— DeepSeek API（OpenAI 兼容接口）+ 流式支持。
- * API Key 通过环境变量读取，不在代码中硬编码。
+ * LLM 引擎 —— 多引擎优雅降级（OpenAI 兼容接口）。
  *
- * 优雅降级：当 DeepSeek 不可用（余额不足/网络失败/Key 失效）时，
- * 返回本地知识库兜底内容，保证页面与功能不报错。
+ * 引擎优先级（免费优先，付费兜底；前一个失败自动切换下一个）：
+ *   1. 智谱 GLM-4-Flash（ZHIPU_API_KEY，免费，默认 glm-4-flash）
+ *   2. 硅基流动 Qwen2.5（SILICONFLOW_API_KEY，免费，默认 Qwen/Qwen2.5-7B-Instruct）
+ *   3. DeepSeek       （DEEPSEEK_API_KEY，付费兜底，默认 deepseek-chat）
+ *   4. 本地知识库兜底（任何引擎都不可用时保证不 500）
+ *
+ * 所有 API Key 均从环境变量读取，不在代码中硬编码。
  */
 
-const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY || process.env.OPENAI_API_KEY || "";
-const DEEPSEEK_BASE = process.env.LLM_BASE_URL || "https://api.deepseek.com/v1";
-const DEEPSEEK_MODEL = process.env.LLM_MODEL || "deepseek-chat";
+/* ============ 引擎定义 ============ */
 
-function hasKey(): boolean {
-  return !!DEEPSEEK_API_KEY && DEEPSEEK_API_KEY.length > 10;
+interface LlmEngine {
+  name: string;
+  apiKey: string;
+  baseUrl: string;
+  model: string;
+}
+
+function buildEngines(): LlmEngine[] {
+  // 引擎优先级：免费引擎优先（智谱 GLM-4-Flash → 硅基流动 Qwen），付费引擎兜底（DeepSeek）
+  const engines: LlmEngine[] = [];
+
+  const zhipuKey = process.env.ZHIPU_API_KEY || "";
+  if (zhipuKey && zhipuKey.length > 10) {
+    engines.push({
+      name: "智谱 GLM-4-Flash（免费）",
+      apiKey: zhipuKey,
+      baseUrl: process.env.ZHIPU_BASE_URL || "https://open.bigmodel.cn/api/paas/v4",
+      model: process.env.ZHIPU_MODEL || "glm-4-flash",
+    });
+  }
+
+  const sfKey = process.env.SILICONFLOW_API_KEY || "";
+  if (sfKey && sfKey.length > 10) {
+    engines.push({
+      name: "硅基流动 Qwen（免费）",
+      apiKey: sfKey,
+      baseUrl: process.env.SILICONFLOW_BASE_URL || "https://api.siliconflow.cn/v1",
+      model: process.env.SILICONFLOW_MODEL || "Qwen/Qwen2.5-7B-Instruct",
+    });
+  }
+
+  const deepseekKey = process.env.DEEPSEEK_API_KEY || process.env.OPENAI_API_KEY || "";
+  if (deepseekKey && deepseekKey.length > 10) {
+    engines.push({
+      name: "DeepSeek（付费兜底）",
+      apiKey: deepseekKey,
+      baseUrl: process.env.LLM_BASE_URL || "https://api.deepseek.com/v1",
+      model: process.env.LLM_MODEL || "deepseek-chat",
+    });
+  }
+
+  return engines;
 }
 
 function isBalanceError(status: number, errText: string): boolean {
@@ -21,7 +63,7 @@ function isBalanceError(status: number, errText: string): boolean {
 /* ============ 本地知识库兜底 ============ */
 
 const KB_FALLBACK =
-  "「烟火节点 · 摊博 TANBOT」当前 AI 引擎正在维护中（DeepSeek 余额不足），以下是品牌知识库快速答复：\n" +
+  "「烟火节点 · 摊博 TANBOT」当前 AI 引擎正在维护中，以下是品牌知识库快速答复：\n" +
   "1. 加入投入：总投入 1.5-2 万元（前 100 名创始主理人首年 ¥5,000，标准年费 ¥10,000）。\n" +
   "2. 无经验可否：可以。SOP 流程化 + AI 选址罗盘/巡店官/经营参谋全程指导。\n" +
   "3. 不赚钱怎么办：严格按 SOP 经营 30 天未达预期，依协议退还大部分会员费。\n" +
@@ -52,6 +94,43 @@ function kbFallbackFor(prompt: string): string {
   return KB_FALLBACK;
 }
 
+function noKeyMessage(): string {
+  const missing: string[] = [];
+  if (!(process.env.DEEPSEEK_API_KEY || process.env.OPENAI_API_KEY)) missing.push("DEEPSEEK_API_KEY");
+  if (!process.env.ZHIPU_API_KEY) missing.push("ZHIPU_API_KEY");
+  if (!process.env.SILICONFLOW_API_KEY) missing.push("SILICONFLOW_API_KEY");
+  return (
+    "AI 引擎未配置 API Key（缺少：" +
+    missing.join(" / ") +
+    "）。请在 .env 或 Vercel 环境变量中配置任一引擎密钥：" +
+    "DeepSeek（DEEPSEEK_API_KEY）、智谱免费 GLM-4-Flash（ZHIPU_API_KEY，bigmodel.cn 注册即送）、" +
+    "或硅基流动免费 Qwen（SILICONFLOW_API_KEY，siliconflow.cn 注册送额度）。"
+  );
+}
+
+/* ============ 通用请求核心 ============ */
+
+async function chatCompletion(
+  engine: LlmEngine,
+  messages: { role: string; content: string }[],
+  options: { temperature?: number; maxTokens?: number; stream?: boolean }
+): Promise<Response> {
+  return fetch(`${engine.baseUrl}/chat/completions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${engine.apiKey}`,
+    },
+    body: JSON.stringify({
+      model: engine.model,
+      messages,
+      temperature: options.temperature ?? 0.7,
+      max_tokens: options.maxTokens ?? 1200,
+      stream: options.stream ?? false,
+    }),
+  });
+}
+
 /* ============ 非流式完成（经营参谋 / 套餐工坊共用） ============ */
 
 export async function llmComplete(
@@ -59,43 +138,39 @@ export async function llmComplete(
   userPrompt: string,
   options?: { temperature?: number; maxTokens?: number }
 ): Promise<string> {
-  if (!hasKey()) {
-    return "（DeepSeek API Key 未配置。请在 .env 或 Vercel 环境变量中设置 DEEPSEEK_API_KEY。）";
+  const engines = buildEngines();
+  if (engines.length === 0) {
+    return "（" + noKeyMessage() + "）";
   }
 
-  try {
-    const response = await fetch(`${DEEPSEEK_BASE}/chat/completions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: DEEPSEEK_MODEL,
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-        temperature: options?.temperature ?? 0.7,
-        max_tokens: options?.maxTokens ?? 1200,
-        stream: false,
-      }),
-    });
+  const messages = [
+    { role: "system", content: systemPrompt },
+    { role: "user", content: userPrompt },
+  ];
 
-    if (!response.ok) {
-      const errText = await response.text();
-      if (isBalanceError(response.status, errText)) {
-        return kbFallbackFor(userPrompt);
+  for (const engine of engines) {
+    try {
+      const response = await chatCompletion(engine, messages, options || {});
+      if (!response.ok) {
+        const errText = await response.text();
+        if (process.env.NODE_ENV !== "production") {
+          console.error(`[llm] ${engine.name} 失败(${response.status}):`, errText.slice(0, 150));
+        }
+        continue; // 失败换下一引擎
       }
-      throw new Error(`LLM 失败 (${response.status}): ${errText.slice(0, 200)}`);
+      const json = await response.json();
+      const content = json.choices?.[0]?.message?.content;
+      if (content) return content;
+    } catch (e) {
+      if (process.env.NODE_ENV !== "production") {
+        console.error(`[llm] ${engine.name} 网络错误:`, e instanceof Error ? e.message : e);
+      }
+      continue;
     }
-
-    const json = await response.json();
-    return json.choices?.[0]?.message?.content || "";
-  } catch (e) {
-    // 网络失败等场景 → 兜底，不抛异常
-    return kbFallbackFor(userPrompt);
   }
+
+  // 全部引擎失败 → 知识库兜底
+  return kbFallbackFor(userPrompt);
 }
 
 /**
@@ -106,42 +181,38 @@ export async function llmChat(
   messages: { role: "user" | "assistant"; content: string }[],
   options?: { temperature?: number; maxTokens?: number }
 ): Promise<string> {
-  if (!hasKey()) {
-    return "（DeepSeek API Key 未配置，AI 客服暂不可用。请在管理员后台配置 API Key。）";
+  const engines = buildEngines();
+  if (engines.length === 0) {
+    return "（" + noKeyMessage() + "）";
   }
 
-  try {
-    const response = await fetch(`${DEEPSEEK_BASE}/chat/completions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: DEEPSEEK_MODEL,
-        messages: [
-          { role: "system", content: systemPrompt },
-          ...messages,
-        ],
-        temperature: options?.temperature ?? 0.7,
-        max_tokens: options?.maxTokens ?? 800,
-        stream: false,
-      }),
-    });
+  const full = [
+    { role: "system", content: systemPrompt },
+    ...messages,
+  ];
+  const prompt = messages.map((m) => m.content).join(" ");
 
-    if (!response.ok) {
-      const errText = await response.text();
-      if (isBalanceError(response.status, errText)) {
-        return kbFallbackFor(messages.map((m) => m.content).join(" "));
+  for (const engine of engines) {
+    try {
+      const response = await chatCompletion(engine, full, options || {});
+      if (!response.ok) {
+        if (process.env.NODE_ENV !== "production") {
+          console.error(`[llm] ${engine.name} 失败(${response.status})，切换下一引擎`);
+        }
+        continue;
       }
-      throw new Error(`LLM 失败 (${response.status}): ${errText.slice(0, 200)}`);
+      const json = await response.json();
+      const content = json.choices?.[0]?.message?.content;
+      if (content) return content;
+    } catch (e) {
+      if (process.env.NODE_ENV !== "production") {
+        console.error(`[llm] ${engine.name} 网络错误:`, e instanceof Error ? e.message : e);
+      }
+      continue;
     }
-
-    const json = await response.json();
-    return json.choices?.[0]?.message?.content || "";
-  } catch (e) {
-    return kbFallbackFor(messages.map((m) => m.content).join(" "));
   }
+
+  return kbFallbackFor(prompt);
 }
 
 /**
@@ -165,35 +236,33 @@ export async function llmChatStream(
       },
     });
 
-  if (!hasKey()) {
-    return makeStream("（DeepSeek API Key 未配置，AI 客服暂不可用。请在管理员后台 /admin 配置 API Key。）");
+  const engines = buildEngines();
+  if (engines.length === 0) {
+    return makeStream("（" + noKeyMessage() + "）");
   }
 
-  try {
-    const response = await fetch(`${DEEPSEEK_BASE}/chat/completions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: DEEPSEEK_MODEL,
-        messages: [
-          { role: "system", content: systemPrompt },
-          ...messages,
-        ],
-        temperature: options?.temperature ?? 0.7,
-        max_tokens: options?.maxTokens ?? 800,
-        stream: true,
-      }),
-    });
+  const full = [
+    { role: "system", content: systemPrompt },
+    ...messages,
+  ];
 
-    if (!response.ok) {
-      return makeStream(fallbackText);
+  for (const engine of engines) {
+    try {
+      const response = await chatCompletion(engine, full, { ...(options || {}), stream: true });
+      if (!response.ok) {
+        if (process.env.NODE_ENV !== "production") {
+          console.error(`[llm] ${engine.name} 流式失败(${response.status})，切换下一引擎`);
+        }
+        continue;
+      }
+      return response.body as ReadableStream<Uint8Array>;
+    } catch (e) {
+      if (process.env.NODE_ENV !== "production") {
+        console.error(`[llm] ${engine.name} 流式网络错误:`, e instanceof Error ? e.message : e);
+      }
+      continue;
     }
-
-    return response.body as ReadableStream<Uint8Array>;
-  } catch (e) {
-    return makeStream(fallbackText);
   }
+
+  return makeStream(fallbackText);
 }
