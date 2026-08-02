@@ -56,8 +56,8 @@ async function main() {
   }
 
   if ((await documentaryDb.count()) === 0) {
-    await documentaryDb.create({ episode: 1, title: "飘叔 · 从谷底到烟火", description: "一个负债三千多万的老兵，如何从一辆破三轮车重新站起。", videoUrl: "", coverUrl: "/images/cart-hero-night.png", duration: 720 });
-    await documentaryDb.create({ episode: 2, title: "烟火节点的诞生", description: "清明上河凡心暖，飘叔公道串烤香。", videoUrl: "", coverUrl: "/images/qingming-scroll.png", duration: 0 });
+    await documentaryDb.create({ episode: 1, title: "飘叔 · 从谷底到烟火", description: "一个负债三千多万的老兵，如何从一辆破三轮车重新站起，用 AI 技术赋能个体劳动者，重建中国地摊经济的尊严与秩序。", videoUrl: "/videos/demo-01-h264.mp4", coverUrl: "/videos/demo-01-cover2.jpg", duration: 5 });
+    await documentaryDb.create({ episode: 2, title: "烟火节点的诞生", description: "清明上河凡心暖，飘叔公道串烤香。从一辆破三轮车到 AI 赋能网络，五个 AI 智能体（选址罗盘/巡店官/经营参谋/智能客服/套餐工坊）如何让每个摊主都能站着赚钱。", videoUrl: "/videos/demo-01-h264.mp4", coverUrl: "/videos/demo-01-cover2.jpg", duration: 5 });
     console.log("✓ 已创建 2 集示例纪录片");
   }
 

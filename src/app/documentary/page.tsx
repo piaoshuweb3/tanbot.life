@@ -95,6 +95,24 @@ export default function DocumentaryPage() {
               subtitle="记录从谷底到烟火、从一辆破三轮车到 AI 赋能网络的完整历程。每一集，都是一段真实的人生与创业记录。"
             />
 
+            {/* 宣传标语 · 文字动效 */}
+            <div className="reveal mx-auto mt-8 max-w-3xl text-center">
+              <p className="font-display text-lg font-bold tracking-wide text-gold md:text-xl">
+                「清明上河凡心暖 · 飘叔公道串烤香」
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                这不是一部商业片，而是一段跨越三十年的灵魂独白——
+                <span className="text-rice">从精英白领到负债三千多万</span>，
+                <span className="text-rice">从铁窗之内到一辆破三轮车</span>，
+                再到用 AI 武装十万个街头摊位的解放运动。
+              </p>
+              <div className="mx-auto mt-4 flex max-w-md items-center gap-3">
+                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-gold/50 to-gold/50" />
+                <span className="text-[11px] tracking-[0.3em] text-gold/80">行为即契约 · 记忆即永生</span>
+                <div className="h-px flex-1 bg-gradient-to-r from-gold/50 via-gold/50 to-transparent" />
+              </div>
+            </div>
+
             {isAdmin && (
               <div className="reveal mx-auto mt-10 max-w-3xl">
                 <Button onClick={() => setShowAdd(!showAdd)} className="bg-gold text-ink hover:bg-gold-bright">
@@ -143,8 +161,9 @@ export default function DocumentaryPage() {
                       {d.coverUrl ? (
                         <img src={d.coverUrl} alt={d.title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                       ) : (
-                        <div className="flex h-full w-full items-center justify-center bg-ink-2">
-                          <Film className="h-12 w-12 text-gold/30" />
+                        <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-ink-2 to-ink">
+                          <Film className="h-10 w-10 text-gold/30" />
+                          <span className="font-mono text-[11px] tracking-[0.25em] text-gold/40">TANBOT · 影像计划</span>
                         </div>
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/20 to-transparent" />
