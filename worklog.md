@@ -630,3 +630,32 @@ Stage Summary:
 - 构建阻塞彻底修复（socket.io示例 + 登录路由类型），线上更新链路恢复
 - 情书战书宣言模块上线首页
 - 代码已同步 GitHub 9e88e05，Vercel 将自动重新部署
+---
+Task ID: 28
+Agent: orchestrator (main)
+Task: 全量核查（推送同步 + AI功能实现状态）+ AI引擎优雅降级
+
+Work Log:
+核查结果:
+- GitHub 同步: 本地=远程=055f64a，6 个提交全部推送成功（新令牌 ghp_XbNG5ivs… 有效）
+- 关键发现: 本机 3000 端口被另一个项目「飘叔 PiaoshuAI AVATAR OS」占用，此前部分 localhost 验证可能命中错误项目；tanbot 改为 3001 端口验证
+- logo: public/images/logo.png + icon 已在远程提交 1e1e7f3 中，线上应随部署更新
+- 数据库: 本地 SQLite 缺表导致登录 500，调用 /api/setup 初始化后正常（piaoshu/admin23 登录成功）
+
+AI 功能实现状态（在 3001 正确端口逐一验证）:
+1. AI 选址罗盘 /api/compass ✅ (score=67, 置信85, 无需LLM纯算法)
+2. AI 智能客服 /api/chat ✅ (DeepSeek 余额不足时返回本地知识库兜底，不再500)
+3. AI 经营参谋 /api/briefing ✅ (今日/昨日/环比/套餐占比统计 + 兜底文案)
+4. AI 套餐推荐 /api/packages/recommend ✅ (mainRecommend=B汴河夜话)
+5. AI 智能巡店官 /api/inspect ⚠️ 代码完整+JSON兜底，但需 .z-ai-config 凭证才能真实调用 VLM（项目无此文件，被gitignore）
+6. DeepSeek API 当前返回 402 Insufficient Balance（账号余额不足，需充值才能恢复真实AI回答）
+
+本次改动:
+- src/lib/llm.ts: 新增本地知识库兜底(kbFallbackFor) + isBalanceError 检测；llmComplete/llmChat 失败时不再抛异常，返回兜底内容；llmChatStream 失败时返回兜底流。AI 功能在任何引擎故障下都不再 500
+- 验证: chat/briefing/packages 全部返回正常 JSON（兜底文案），lint 0 error
+- commit 055f64a push 成功
+
+待办(用户侧):
+1. DeepSeek 账户充值（api.deepseek.com 余额不足）→ 恢复真实 AI 回答
+2. 如需 AI 巡店官真实 VLM：配置 .z-ai-config（z-ai SDK 凭证）
+3. Vercel 端确认 DATABASE_URL 指向 Turso 云库（本地 file: 仅开发用）
