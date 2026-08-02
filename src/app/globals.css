@@ -354,6 +354,26 @@
   transform: translateY(0);
 }
 
+/* 炭火灯 · 炉火点亮签名动效（挂在 .reveal 内，随区块进入视口点亮） */
+.fire-lantern {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: #5a1f12;              /* 未点亮：暗炭红 */
+  box-shadow: 0 0 0 2px rgba(90, 31, 18, 0.25);
+  transition: background 0.8s ease, box-shadow 0.8s ease;
+}
+.reveal.is-visible .fire-lantern {
+  background: #ff6b35;              /* 点亮：暖橘 */
+  box-shadow: 0 0 6px 2px rgba(255, 107, 53, 0.55), 0 0 18px 4px rgba(255, 107, 53, 0.28);
+  animation: fire-lantern-pulse 2.6s ease-in-out infinite;
+}
+@keyframes fire-lantern-pulse {
+  0%, 100% { box-shadow: 0 0 6px 2px rgba(255,107,53,0.55), 0 0 18px 4px rgba(255,107,53,0.28); }
+  50%      { box-shadow: 0 0 8px 3px rgba(255,107,53,0.7), 0 0 26px 7px rgba(255,107,53,0.4); }
+}
+
 /* number tabular */
 .tnum {
   font-variant-numeric: tabular-nums;

@@ -1,17 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { Menu, X, ChevronDown } from "lucide-react";
 
-const HOME_ANCHORS = [
-  { href: "#soul", label: "品牌灵魂" },
-  { href: "#era", label: "时代" },
-  { href: "#ai", label: "AI 系统" },
-  { href: "#asset", label: "品牌资产" },
+// 一级导航（精简至 4 项，突出品牌核心动作）
+const PRIMARY_LINKS = [
+  { href: "#soul", label: "品牌灵魂", anchor: true },
+  { href: "#ai", label: "AI 系统", anchor: true },
+  { href: "/packages", label: "套餐工坊" },
+  { href: "#join", label: "加入", anchor: true },
 ];
 
-const GLOBAL_LINKS = [
+// 「更多」下拉收纳的次级链接
+const MORE_LINKS = [
   { href: "/about", label: "关于我" },
   { href: "/trend", label: "爆品雷达" },
   { href: "/cart", label: "餐车矩阵" },
@@ -19,19 +20,50 @@ const GLOBAL_LINKS = [
   { href: "/partner", label: "城市合伙人" },
   { href: "/whitepaper", label: "白皮书" },
   { href: "/documentary", label: "纪录片" },
-];
-
-const TOOL_LINKS = [
   { href: "/inspect", label: "AI 巡店" },
-  { href: "/packages", label: "套餐工坊" },
   { href: "/chat", label: "智能客服" },
 ];
+
+/* 「更多」下拉菜单 */
+function MoreMenu() {
+  const [moreOpen, setMoreOpen] = useState(false);
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => setMoreOpen(true)}
+      onMouseLeave={() => setMoreOpen(false)}
+    >
+      <button
+        className="flex items-center gap-1 rounded-md px-3 py-1.5 text-[13px] font-semibold text-muted-foreground transition-colors duration-100 hover:text-gold"
+        onClick={() => setMoreOpen((v) => !v)}
+        aria-expanded={moreOpen}
+      >
+        更多
+        <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${moreOpen ? "rotate-180" : ""}`} />
+      </button>
+      <div
+        className={`absolute right-0 top-full z-50 w-44 overflow-hidden rounded-lg border border-gold/20 bg-ink-2/95 shadow-xl backdrop-blur-xl transition-all duration-200 ${
+          moreOpen ? "visible translate-y-0 opacity-100" : "invisible -translate-y-1 opacity-0"
+        }`}
+      >
+        {MORE_LINKS.map((item) => (
+          <a
+            key={item.href + item.label}
+            href={item.href}
+            onClick={() => setMoreOpen(false)}
+            className="block px-4 py-2.5 text-[13px] text-muted-foreground transition-colors hover:bg-ink-3 hover:text-gold"
+          >
+            {item.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const pathname = usePathname();
-  const isHome = pathname === "/";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -66,36 +98,19 @@ export function SiteHeader() {
           </div>
         </a>
 
-        {/* Desktop nav (lg 以上显示全部，md 显示精简) */}
+        {/* Desktop nav · 一级 4 项 + 更多下拉 */}
         <nav className="hidden items-center gap-0.5 lg:flex">
-          {isHome && HOME_ANCHORS.map((item) => (
+          {PRIMARY_LINKS.map((item) => (
             <a
-              key={item.href}
+              key={item.href + item.label}
               href={item.href}
-              className="rounded-md px-2.5 py-1.5 text-[13px] font-medium text-muted-foreground transition-colors duration-100 hover:text-gold"
+              className="rounded-md px-3 py-1.5 text-[13px] font-semibold text-text-soft transition-colors duration-100 hover:text-gold"
             >
               {item.label}
             </a>
           ))}
-          {GLOBAL_LINKS.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="rounded-md px-2.5 py-1.5 text-[13px] font-medium text-muted-foreground transition-colors duration-100 hover:text-gold"
-            >
-              {item.label}
-            </a>
-          ))}
-          <span className="mx-1 h-4 w-px bg-gold/20" />
-          {TOOL_LINKS.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="rounded-md px-2 py-1.5 text-[12px] font-medium text-muted-foreground/80 transition-colors duration-100 hover:text-gold"
-            >
-              {item.label}
-            </a>
-          ))}
+          {/* 更多下拉 */}
+          <MoreMenu />
         </nav>
 
         <div className="flex items-center gap-2">
@@ -126,32 +141,22 @@ export function SiteHeader() {
       {open && (
         <div className="border-t border-gold/15 bg-ink/95 backdrop-blur-xl lg:hidden">
           <nav className="mx-auto grid max-w-7xl grid-cols-2 gap-1 px-4 py-3 sm:grid-cols-3">
-            {isHome && HOME_ANCHORS.map((item) => (
+            {PRIMARY_LINKS.map((item) => (
               <a
-                key={item.href}
+                key={item.href + item.label}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-ink-3 hover:text-gold"
+                className="rounded-md px-3 py-2.5 text-sm font-semibold text-text-soft transition-colors hover:bg-ink-3 hover:text-gold"
               >
                 {item.label}
               </a>
             ))}
-            {GLOBAL_LINKS.map((item) => (
+            {MORE_LINKS.map((item) => (
               <a
-                key={item.href}
+                key={item.href + item.label}
                 href={item.href}
                 onClick={() => setOpen(false)}
                 className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-ink-3 hover:text-gold"
-              >
-                {item.label}
-              </a>
-            ))}
-            {TOOL_LINKS.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground/70 transition-colors hover:bg-ink-3 hover:text-gold"
               >
                 {item.label}
               </a>

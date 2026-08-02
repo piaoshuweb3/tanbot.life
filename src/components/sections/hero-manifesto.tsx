@@ -30,6 +30,34 @@ function LiveTicker() {
   );
 }
 
+/* ===== Hero HUD 数据浮层 · 摊车角落终端实时数据 ===== */
+function HeroHud() {
+  const rows = [
+    { k: "NODE", v: "SH-024", c: "text-gold" },
+    { k: "LOC", v: "上海 · 徐汇", c: "text-rice" },
+    { k: "REV", v: "¥1,284,560", c: "text-rice" },
+    { k: "CREDIT", v: "95", c: "text-jade" },
+    { k: "AI", v: "5 AGENTS ONLINE", c: "text-gold" },
+  ];
+  return (
+    <div className="pointer-events-none absolute bottom-6 right-4 z-10 hidden select-none flex-col gap-1.5 rounded-lg border border-gold/25 bg-ink/80 px-4 py-3 font-mono text-[10px] leading-none backdrop-blur-md md:flex lg:right-8">
+      <div className="mb-1 flex items-center gap-1.5 border-b border-gold/20 pb-1.5">
+        <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-jade" />
+        <span className="tracking-[0.25em] text-gold/80">TANBOT OS · LIVE</span>
+      </div>
+      {rows.map((r, i) => (
+        <div key={i} className="flex items-center justify-between gap-6">
+          <span className="tracking-[0.2em] text-muted-foreground">{r.k}</span>
+          <span className={r.c}>{r.v}</span>
+        </div>
+      ))}
+      <div className="mt-1 border-t border-gold/20 pt-1.5 text-right text-[9px] text-gold/50">
+        {new Date().toISOString().slice(11, 19)} · 行为即契约
+      </div>
+    </div>
+  );
+}
+
 export function HeroManifesto() {
   const [bgReady, setBgReady] = useState(false);
   useEffect(() => {
@@ -71,6 +99,9 @@ export function HeroManifesto() {
 
       {/* 顶部呼吸光带 */}
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
+
+      {/* Hero HUD · 摊车角落终端数据浮层 */}
+      <HeroHud />
 
       <div className="relative flex min-h-screen flex-col">
         {/* 滚动数据条（pt-16 为固定导航栏留位） */}
@@ -118,13 +149,13 @@ export function HeroManifesto() {
             data-delay="80"
           >
             <p
-              className="font-brush text-4xl leading-tight text-rice sm:text-5xl md:text-6xl"
+              className="font-brush text-[1.65rem] leading-tight text-rice sm:text-5xl md:text-6xl"
               style={{ textShadow: "0 0 32px rgba(255,107,53,0.45), 0 0 8px rgba(245,240,232,0.3)" }}
             >
               清明上河凡心暖
             </p>
             <p
-              className="font-brush text-4xl leading-tight text-rice sm:text-5xl md:text-6xl"
+              className="font-brush text-[1.65rem] leading-tight text-rice sm:text-5xl md:text-6xl"
               style={{ textShadow: "0 0 32px rgba(255,107,53,0.45), 0 0 8px rgba(245,240,232,0.3)" }}
             >
               飘叔公道串烤香

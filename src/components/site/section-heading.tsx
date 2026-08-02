@@ -24,6 +24,8 @@ export function SectionHeading({
       {eyebrow && (
         <div className="mb-4 flex items-center gap-3">
           <span className="h-px w-8 bg-gold/60" />
+          {/* 炭火灯 · 区块进入视口时点亮（炉火签名动效） */}
+          <span className="fire-lantern" aria-hidden />
           <span className="text-xs font-medium uppercase tracking-[0.32em] text-gold">
             {eyebrow}
           </span>
