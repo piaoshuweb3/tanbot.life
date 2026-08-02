@@ -196,6 +196,7 @@ async function runVisionAnalysis(imageUrl: string): Promise<string> {
   try {
     const zai = await ZAI.create();
     const response = await zai.chat.completions.createVision({
+      model: process.env.VISION_MODEL || "z-ai-vision",
       messages: [
         {
           role: "user",
