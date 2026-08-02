@@ -243,11 +243,25 @@ export default function DocumentaryPage() {
       {playing && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/90 p-4 backdrop-blur-sm" onClick={() => setPlaying(null)}>
           <div className="relative w-full max-w-4xl" onClick={(e) => e.stopPropagation()}>
-            <button onClick={() => setPlaying(null)} className="absolute -top-10 right-0 flex h-8 w-8 items-center justify-center rounded-full border border-gold/30 text-gold">
+            <button
+              onClick={(e) => { e.stopPropagation(); setPlaying(null); }}
+              className="absolute -top-10 right-0 flex h-8 w-8 items-center justify-center rounded-full border border-gold/30 text-gold"
+              aria-label="关闭"
+            >
               <X className="h-4 w-4" />
             </button>
             <div className="overflow-hidden rounded-xl border border-gold/30 bg-ink">
-              <video src={playing.videoUrl} controls autoPlay className="aspect-video w-full" />
+              <video
+                src={playing.videoUrl}
+                controls
+                autoPlay
+                playsInline
+                preload="auto"
+                onClick={(e) => e.stopPropagation()}
+                onPlay={(e) => e.stopPropagation()}
+                onPause={(e) => e.stopPropagation()}
+                className="aspect-video w-full"
+              />
               <div className="p-5">
                 <h3 className="font-display text-lg font-bold text-rice">第 {playing.episode} 集 · {playing.title}</h3>
                 {playing.description && <p className="mt-2 text-sm text-muted-foreground">{playing.description}</p>}
