@@ -5,8 +5,8 @@ import { BookOpen, ChevronRight, Quote } from "lucide-react";
 
 interface SubSection {
   no?: string;
-  title: string;
-  paras: string[];
+  title?: string;
+  paras?: string[];
   quote?: string;
   list?: string[];
 }

@@ -1,38 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Noto_Sans_SC, Noto_Serif_SC, Ma_Shan_Zheng } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const notoSansSC = Noto_Sans_SC({
-  variable: "--font-noto-sans-sc",
-  subsets: ["latin"],
-  weight: ["400", "500", "700", "900"],
-  preload: false,
-});
-
-const notoSerifSC = Noto_Serif_SC({
-  variable: "--font-serif-sc",
-  subsets: ["latin"],
-  weight: ["400", "700", "900"],
-  preload: false,
-});
-
-const maShanZheng = Ma_Shan_Zheng({
-  variable: "--font-brush-sc",
-  subsets: ["latin"],
-  weight: ["400"],
-  preload: false,
-});
 
 const SITE_URL = "https://tanbot.life";
 const SITE_NAME = "烟火节点 · 摊博 TANBOT";
@@ -299,8 +267,8 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${notoSansSC.variable} ${notoSerifSC.variable} ${maShanZheng.variable} antialiased bg-background text-foreground`}
-        style={{ fontFamily: "var(--font-noto-sans-sc), var(--font-geist-sans), sans-serif" }}
+        className="antialiased bg-background text-foreground"
+        style={{ fontFamily: "'Noto Sans SC', 'Geist Sans', sans-serif" }}
       >
         {children}
         <Toaster />
