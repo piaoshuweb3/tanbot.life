@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { useReveal } from "@/hooks/use-reveal";
 
 interface Doc {
   id: string;
@@ -53,6 +54,7 @@ function fmtDuration(s: number | null) {
 }
 
 export default function DocumentaryPage() {
+  useReveal();
   const { toast } = useToast();
   const [docs, setDocs] = useState<Doc[]>(INLINE_DOCS);
   const [loading, setLoading] = useState(false);
