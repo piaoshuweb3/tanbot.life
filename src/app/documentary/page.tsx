@@ -21,6 +21,30 @@ interface Doc {
   createdAt: string;
 }
 
+/* SSR 首帧内联数据：保证任何浏览器打开即有内容（不依赖客户端 fetch 完成） */
+const INLINE_DOCS: Doc[] = [
+  {
+    id: "inline-1",
+    episode: 1,
+    title: "飘叔 · 从谷底到烟火",
+    description: "（演示视频）一个负债三千多万的老兵，如何从一辆破三轮车重新站起，用 AI 赋能个体劳动者。 —— 行为即契约，记忆即永生。",
+    videoUrl: "/videos/demo-01-h264.mp4",
+    coverUrl: "/videos/demo-01-cover2.jpg",
+    duration: 5,
+    createdAt: "2026-08-03 00:00:00",
+  },
+  {
+    id: "inline-2",
+    episode: 2,
+    title: "烟火节点的诞生",
+    description: "（演示视频）清明上河凡心暖，飘叔公道串烤香。记录品牌从对联到系统的完整构思过程。 —— 行为即契约，记忆即永生。",
+    videoUrl: "/videos/demo-01-h264.mp4",
+    coverUrl: "/videos/demo-01-cover2.jpg",
+    duration: 5,
+    createdAt: "2026-08-03 00:00:00",
+  },
+];
+
 function fmtDuration(s: number | null) {
   if (!s) return "待定";
   const m = Math.floor(s / 60);
@@ -30,8 +54,8 @@ function fmtDuration(s: number | null) {
 
 export default function DocumentaryPage() {
   const { toast } = useToast();
-  const [docs, setDocs] = useState<Doc[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [docs, setDocs] = useState<Doc[]>(INLINE_DOCS);
+  const [loading, setLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [playing, setPlaying] = useState<Doc | null>(null);
@@ -40,7 +64,10 @@ export default function DocumentaryPage() {
   const load = () => {
     fetch("/api/documentary")
       .then((r) => r.json())
-      .then((j) => j.ok && setDocs(j.data))
+      .then((j) => {
+        if (j.ok && Array.isArray(j.data) && j.data.length > 0) setDocs(j.data);
+      })
+      .catch(() => {})
       .finally(() => setLoading(false));
   };
 
