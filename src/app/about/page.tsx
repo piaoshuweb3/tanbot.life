@@ -14,7 +14,7 @@ export default function AboutPage() {
       <SiteHeader />
       <main className="flex-1">
         {/* 返回首页 · 顶部条 */}
-        <div className="border-b border-gold/10 bg-ink-2/40">
+        <div className="border-b border-gold/10 bg-ink-2/40 pt-16">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
             <a
               href="/"

@@ -138,7 +138,7 @@ export default function PartnerPage() {
       <SiteHeader />
       <main className="flex-1">
         {/* 面包条 */}
-        <div className="border-b border-gold/10 bg-ink-2/40">
+        <div className="border-b border-gold/10 bg-ink-2/40 pt-16">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
             <a href="/" className="group flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-gold">
               <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
