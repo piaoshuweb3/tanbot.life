@@ -11,6 +11,12 @@ export const metadata: Metadata = {
     "地摊经济招商文件",
     "飘叔招商计划",
     "烟火节点TANBOT",
+    "招商文件",
+    "加盟白皮书",
+    "地摊经济报告",
+    "合伙制度",
+    "NFT白皮书",
+    "城市合伙人计划",
   ],
   alternates: { canonical: "https://tanbot.life/whitepaper" },
   openGraph: {

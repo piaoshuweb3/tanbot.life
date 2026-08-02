@@ -11,6 +11,11 @@ export const metadata: Metadata = {
     "烟火节点套餐",
     "三分钟出餐",
     "套餐命名清明上河",
+    "地摊菜单设计",
+    "烤串定价",
+    "小本餐饮",
+    "套餐营销",
+    "地摊餐饮标准化",
   ],
   alternates: { canonical: "https://tanbot.life/packages" },
   openGraph: {

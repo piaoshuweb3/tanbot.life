@@ -12,6 +12,11 @@ export const metadata: Metadata = {
     "街头创业者",
     "摆摊人生",
     "AI创业纪录片",
+    "创业纪录片",
+    "地摊人生",
+    "翻身逆袭",
+    "中国创业者",
+    "AI创业故事",
   ],
   alternates: { canonical: "https://tanbot.life/documentary" },
   openGraph: {

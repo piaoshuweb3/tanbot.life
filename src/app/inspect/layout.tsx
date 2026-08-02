@@ -12,6 +12,11 @@ export const metadata: Metadata = {
     "VLM视觉模型",
     "烤串品质检测",
     "烟火节点",
+    "AI视觉质检",
+    "食品安全检查",
+    "餐饮品控",
+    "出品标准化",
+    "后厨AI",
   ],
   alternates: { canonical: "https://tanbot.life/inspect" },
   openGraph: {

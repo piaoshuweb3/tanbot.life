@@ -12,6 +12,11 @@ export const metadata: Metadata = {
     "摊车合伙人",
     "餐饮创业招商",
     "飘叔招商",
+    "地摊加盟",
+    "城市代理",
+    "招商加盟",
+    "地摊连锁",
+    "城市合伙人招募",
   ],
   alternates: { canonical: "https://tanbot.life/partner" },
   openGraph: {

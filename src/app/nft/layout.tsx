@@ -12,6 +12,12 @@ export const metadata: Metadata = {
     "区块链确权",
     "地摊经济NFT",
     "摊位经营权",
+    "地摊NFT",
+    "摊位数字资产",
+    "经营权上链",
+    "Web3创业",
+    "数字身份",
+    "地摊确权",
   ],
   alternates: { canonical: "https://tanbot.life/nft" },
   openGraph: {

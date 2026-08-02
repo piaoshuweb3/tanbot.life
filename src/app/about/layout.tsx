@@ -11,6 +11,11 @@ export const metadata: Metadata = {
     "地摊经济宣言",
     "负债翻身",
     "AI赋能个体",
+    "飘叔三十年",
+    "地摊宣言",
+    "草根创业故事",
+    "街头奋斗者",
+    "中国地摊车创业",
   ],
   alternates: { canonical: "https://tanbot.life/about" },
   openGraph: {
