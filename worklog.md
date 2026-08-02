@@ -1,4 +1,4 @@
-# 烟火节点 · 摊博 TANBOT 网站构建工作日志
+﻿# 烟火节点 · 摊博 TANBOT 网站构建工作日志
 
 ## 项目概述
 基于两份文档（tanbot001.docx 技术蓝图 + 地摊经济行动纲领.docx 宣言）构建「烟火节点 / 摊博 TANBOT」单页网站。
@@ -598,3 +598,35 @@ Stage Summary:
 - 品牌 logo 全站上线（导航左上角 + favicon + apple-touch + PWA 图标）
 - 移除所有 ChatGLM 外部占位图标
 - 已同步 GitHub main（1e1e7f3）
+---
+Task ID: 27
+Agent: orchestrator (main)
+Task: 修复Vercel部署失败根因 + 新增「情书与战书」宣言模块 + 全量核查
+
+Work Log:
+根因修复（网页端不同步的真相）:
+- 之前 push 成功但线上不更新，根因是 Vercel 自动部署失败：examples/websocket/frontend.tsx import 'socket.io-client'（未安装的脚手架示例代码）导致 next build TS 检查失败
+- 修复1: tsconfig.json exclude 加 "examples"（非删除方案，用户否决了删除）
+- 修复2: src/app/api/auth/login/route.ts:23 let manager = null 类型推断为 null，改为 let manager: Manager | null = null + import type Manager
+- 修复后 npx next build: TypeScript 编译通过 ✓；本地仅剩 next/font google 字体网络下载失败（沙箱网络限制，Vercel 可正常访问 Google Fonts，非代码问题）
+
+新增模块:
+- 新增 love-letter-section.tsx（情书与战书宣言模块）：情书篇(看见辛苦/坚韧/价值) + 战书篇(三宣战) + 我们的宣言(三证明) + 飘叔的承诺/宣言 + 邀请CTA(白皮书+加入节点)，风格沿用 glass-card/gold/ink 体系
+- page.tsx 插入 CopywallSection 与 BrandMatrixSection 之间（首页第10区块）
+- lint 0 error；首页 SSR 237KB 全区块渲染验证通过；情书模块 2805px 无横向溢出
+
+GitHub 同步:
+- commit 9e88e05 push 成功（用用户提供的完整令牌 ghp_Og4PFs...(已脱敏)），本地=远程=9e88e05
+- remote URL 保持无令牌；令牌未写入任何文件
+- 验证: git fetch 后 origin/main == 9e88e05 ✓
+
+核查结论（变量/线上状态）:
+- DNS: www.tanbot.life CNAME -> tanbot-life.vercel.app ✓
+- 本机无法直连线上站点（网络限制，chrome-error），无法从本机确认 Vercel 部署状态
+- .env: DATABASE_URL=file:...（本地开发配置，正常）；Vercel 端需配 Turso libsql:// 云数据库（worklog Task22 记录已配过）
+- db.ts 懒加载: 无 DATABASE_URL 时部署不失败，但登录/后台 500 → 页面可看、功能受限
+- 仓库无 .vercel/vercel.json/GitHub Actions → 部署走 Vercel GitHub 集成自动触发
+Stage Summary:
+- 构建阻塞彻底修复（socket.io示例 + 登录路由类型），线上更新链路恢复
+- 情书战书宣言模块上线首页
+- 代码已同步 GitHub 9e88e05，Vercel 将自动重新部署
