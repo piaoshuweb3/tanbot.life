@@ -163,6 +163,20 @@ export const documentaryDb = {
       args: [genId(), data.episode, data.title, data.description ?? null, data.videoUrl, data.coverUrl ?? null, data.duration ?? null, data.status ?? "published"],
     });
   },
+  async updateByEpisode(episode: number, data: { description?: string; videoUrl?: string; coverUrl?: string; duration?: number }): Promise<void> {
+    const sets: string[] = [];
+    const args: any[] = [];
+    if (data.description !== undefined) { sets.push("description = ?"); args.push(data.description); }
+    if (data.videoUrl !== undefined) { sets.push("videoUrl = ?"); args.push(data.videoUrl); }
+    if (data.coverUrl !== undefined) { sets.push("coverUrl = ?"); args.push(data.coverUrl); }
+    if (data.duration !== undefined) { sets.push("duration = ?"); args.push(data.duration); }
+    if (sets.length === 0) return;
+    args.push(episode);
+    await rawDb.execute({
+      sql: `UPDATE Documentary SET ${sets.join(", ")} WHERE episode = ?`,
+      args,
+    });
+  },
 };
 
 // ===== AIModel =====
