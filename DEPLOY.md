@@ -98,3 +98,17 @@ bun run src/lib/seed.ts  # 灌入测试数据
 2. **Authorization: Bearer <token>** header（跨域主通道，存 localStorage）
 
 登录成功后 token 存入 localStorage，后续请求通过 header 发送，不依赖跨域 cookie。
+
+## 步骤 6：配置 AI 视觉模型（AI 巡店官）
+
+AI 巡店官支持多引擎视觉分析，按优先级：
+1. 环境变量视觉模型（OpenAI 兼容 /chat/completions）：智谱 GLM-4V、通义 Qwen-VL、Kimi Vision 等
+2. z-ai SDK（需 .z-ai-config 文件，baseUrl+apiKey，OpenAI 兼容）
+3. 均未配置时返回明确提示（不崩溃）
+
+Vercel 环境变量示例（智谱 GLM-4V-Flash，免费额度）：
+- VISION_API_URL=https://open.bigmodel.cn/api/paas/v4
+- VISION_API_KEY=你的智谱Key
+- VISION_MODEL=glm-4v-flash
+
+DeepSeek 充值：https://platform.deepseek.com → 充值（AI 客服/参谋/套餐依赖，余额不足时已降级为本地知识库兜底）
