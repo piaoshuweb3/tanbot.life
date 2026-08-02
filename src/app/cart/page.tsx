@@ -26,6 +26,8 @@ interface Cart {
   buildDays: string;
   products: string[];
   accent: string;
+  image: string;
+  image2?: string;
 }
 
 const CARTS: Cart[] = [
@@ -35,6 +37,8 @@ const CARTS: Cart[] = [
     size: "3.0m × 1.6m × 2.2m", materials: "304 不锈钢 + 碳化木饰面", equipment: "定制炭烤炉 ×2 · 保鲜冰柜 120L",
     power: "市电 220V / 锂电续航 8h", weight: "约 420kg", price: "¥28,000", buildDays: "15 天",
     products: ["飘叔公道·串烤香", "深夜牛排"], accent: "from-ink-3 to-ink",
+    image: "/images/carts/cart-01.jpg",
+    image2: "/images/carts/cart-10.jpg"
   },
   {
     id: "c2", name: "铁板烧标准餐车", category: "铁板烧", keywords: "铁板 · 猛火 · 出餐快",
@@ -42,6 +46,8 @@ const CARTS: Cart[] = [
     size: "3.2m × 1.6m × 2.2m", materials: "304 不锈钢 + 防滑铝板", equipment: "铸铁铁板台 80cm · 猛火炉 ×2",
     power: "市电 220V / 液化气可选", weight: "约 480kg", price: "¥32,000", buildDays: "18 天",
     products: ["铁板烧"], accent: "from-ink-3 to-ink",
+    image: "/images/carts/cart-03.jpg",
+    image2: "/images/carts/cart-08.jpg"
   },
   {
     id: "c3", name: "日式烧鸟专属餐车", category: "日式烧鸟", keywords: "日式 · 灯笼 · 氛围感",
@@ -49,6 +55,7 @@ const CARTS: Cart[] = [
     size: "3.0m × 1.5m × 2.3m", materials: "碳化木 + 哑光黑钢", equipment: "备长炭烤炉 · 保温柜 60L",
     power: "市电 220V / 锂电续航 6h", weight: "约 400kg", price: "¥35,000", buildDays: "20 天",
     products: ["日式烧鸟"], accent: "from-ink-3 to-ink",
+    image: "/images/carts/cart-02.jpg"
   },
   {
     id: "c4", name: "深夜牛排餐车", category: "深夜牛排", keywords: "西式 · 明火 · 高客单",
@@ -56,6 +63,7 @@ const CARTS: Cart[] = [
     size: "3.5m × 1.8m × 2.2m", materials: "304 不锈钢 + 木纹铝板", equipment: "牛排铁板台 · 冷藏展示柜",
     power: "市电 220V / 液化气", weight: "约 550kg", price: "¥42,000", buildDays: "22 天",
     products: ["深夜牛排"], accent: "from-ink-3 to-ink",
+    image: "/images/carts/cart-05.jpg"
   },
   {
     id: "c5", name: "晨间粥点餐车", category: "晨间粥点", keywords: "早餐 · 保温 · 快翻台",
@@ -63,6 +71,8 @@ const CARTS: Cart[] = [
     size: "2.6m × 1.4m × 2.2m", materials: "304 不锈钢 + 保温夹层", equipment: "电粥桶 ×3 · 蒸柜 40L",
     power: "市电 220V / 锂电续航 10h", weight: "约 320kg", price: "¥22,000", buildDays: "12 天",
     products: ["晨间粥点"], accent: "from-ink-3 to-ink",
+    image: "/images/carts/cart-04.jpg",
+    image2: "/images/carts/cart-07.jpg"
   },
   {
     id: "c6", name: "国民汉堡餐车", category: "国民汉堡", keywords: "潮流 · 涂鸦 · 年轻化",
@@ -70,6 +80,8 @@ const CARTS: Cart[] = [
     size: "3.0m × 1.6m × 2.2m", materials: "彩钢 + 户外漆面", equipment: "双煎炉 · 保温展示柜",
     power: "市电 220V / 锂电续航 8h", weight: "约 400kg", price: "¥26,000", buildDays: "14 天",
     products: ["国民汉堡"], accent: "from-ink-3 to-ink",
+    image: "/images/carts/cart-06.jpg",
+    image2: "/images/carts/cart-09.jpg"
   },
 ];
 
@@ -125,17 +137,18 @@ export default function CartPage() {
                   className={`reveal group relative overflow-hidden rounded-2xl border border-gold/20 bg-gradient-to-br ${c.accent} p-6 text-left transition-all hover:-translate-y-1 hover:border-gold/50`}
                   data-delay={`${(i % 3) * 70}`}
                 >
-                  {/* 模拟车体预览 */}
-                  <div className="relative mb-4 h-32 overflow-hidden rounded-xl border border-gold/15 bg-ink">
-                    <div className="absolute inset-0 grid-bg opacity-30" />
-                    <div className="absolute left-1/2 top-1/2 h-20 w-40 -translate-x-1/2 -translate-y-1/2 rounded-lg border border-gold/30 bg-gradient-to-br from-ink-4 to-ink-2 transition-all duration-300 group-hover:border-gold/60" />
-                    <div className="absolute left-1/2 top-1/2 h-6 w-24 -translate-x-1/2 -translate-y-1/2 rounded border border-gold/40 bg-gold/20" />
-                    <div className="absolute bottom-2 left-1/2 h-1.5 w-10 -translate-x-1/2 rounded-full bg-gold/40" />
-                    <Flame className="absolute bottom-3 left-6 h-5 w-5 text-ember" />
-                    <div className="absolute bottom-3 right-6 flex gap-1">
-                      <span className="h-2 w-2 rounded-full bg-gold/60" />
-                      <span className="h-2 w-2 rounded-full bg-gold/60" />
-                    </div>
+                  {/* 餐车实拍图 */}
+                  <div className="relative mb-4 h-40 overflow-hidden rounded-xl border border-gold/15 bg-ink">
+                    <img
+                      src={c.image}
+                      alt={`${c.name} · ${c.category}`}
+                      className="h-full w-full object-cover transition-all duration-300 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
+                    <span className="absolute bottom-2 left-3 rounded-full border border-gold/30 bg-ink/70 px-2.5 py-0.5 font-mono text-[10px] tracking-wider text-gold backdrop-blur">
+                      {c.keywords}
+                    </span>
                   </div>
 
                   <div className="flex items-start justify-between">
@@ -184,6 +197,12 @@ export default function CartPage() {
                 <div className="lg:col-span-3 rounded-xl border border-gold/20 bg-ink-2/60 p-5">
                   <div className="relative h-56 overflow-hidden rounded-xl border border-gold/15 bg-ink">
                     <div className="absolute inset-0 grid-bg opacity-30" />
+                    <img
+                      src={selected.image}
+                      alt={selected.name}
+                      className="absolute inset-0 h-full w-full object-cover opacity-40 transition-opacity duration-500"
+                      loading="lazy"
+                    />
                     {/* 车体：颜色切换 */}
                     <div
                       className={`absolute left-1/2 top-1/2 h-32 w-64 -translate-x-1/2 -translate-y-1/2 rounded-xl border transition-colors duration-500 ${
