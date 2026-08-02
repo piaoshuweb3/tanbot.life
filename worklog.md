@@ -659,3 +659,21 @@ AI 功能实现状态（在 3001 正确端口逐一验证）:
 1. DeepSeek 账户充值（api.deepseek.com 余额不足）→ 恢复真实 AI 回答
 2. 如需 AI 巡店官真实 VLM：配置 .z-ai-config（z-ai SDK 凭证）
 3. Vercel 端确认 DATABASE_URL 指向 Turso 云库（本地 file: 仅开发用）
+---
+Task ID: 29
+Agent: orchestrator (main)
+Task: AI巡店官多引擎支持 + DeepSeek充值验证 + 环境变量文档
+
+Work Log:
+- DeepSeek 充值后验证：API 恢复 HTTP 200，AI 客服返回真实个性化回答（成都2万预算→推荐川味小串+飘叔牛肉串+贩夫收摊/虹桥小聚，品牌话术完整）
+- AI 客服互动性确认正常：能根据城市/预算给建议，融入「行为即契约」等品牌信仰
+- inspect 路由改造为多引擎视觉分析：
+  引擎1: VISION_API_URL/VISION_API_KEY/VISION_MODEL 环境变量（OpenAI 兼容 /chat/completions，支持智谱GLM-4V/通义Qwen-VL/Kimi Vision）
+  引擎2: z-ai SDK（需 .z-ai-config）
+  引擎3: 均未配置时返回 502 + 明确提示「未配置视觉模型…」，不崩溃
+  验证: 无配置时 HTTP 502 body=「AI 视觉分析失败：未配置视觉模型…」✓；前端 inspect-demo 已有错误展示逻辑
+- z-ai SDK 底层确认：createVision 调 {baseUrl}/chat/completions/vision 私有路径+thinking字段+X-Z-AI-From header，无法直连国内厂商标准端点 → 所以引擎1用原生 fetch 直连 /chat/completions
+- 新增 .env.example（含 DATABASE_URL/DEEPSEEK_API_KEY/VISION_API_* 注释），DEPLOY.md 补充步骤6(AI视觉模型配置指南)
+- .gitignore 增加 !.env.example 例外
+- 待推送3提交: 5807006(inspect多引擎) cfb4b97(.env.example+DEPLOY) 61c6d0f(gitignore例外)
+- 令牌状态: ghp_xc62 已失效(聊天分享后被GitHub自动撤销)，需新令牌推送
