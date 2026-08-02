@@ -13,10 +13,15 @@ const HOME_ANCHORS = [
 
 const GLOBAL_LINKS = [
   { href: "/about", label: "关于我" },
+  { href: "/trend", label: "爆品雷达" },
+  { href: "/cart", label: "餐车矩阵" },
   { href: "/nft", label: "NFT 节点" },
   { href: "/partner", label: "城市合伙人" },
   { href: "/whitepaper", label: "白皮书" },
   { href: "/documentary", label: "纪录片" },
+];
+
+const TOOL_LINKS = [
   { href: "/inspect", label: "AI 巡店" },
   { href: "/packages", label: "套餐工坊" },
   { href: "/chat", label: "智能客服" },
@@ -81,6 +86,16 @@ export function SiteHeader() {
               {item.label}
             </a>
           ))}
+          <span className="mx-1 h-4 w-px bg-gold/20" />
+          {TOOL_LINKS.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="rounded-md px-2 py-1.5 text-[12px] font-medium text-muted-foreground/80 transition-colors duration-100 hover:text-gold"
+            >
+              {item.label}
+            </a>
+          ))}
         </nav>
 
         <div className="flex items-center gap-2">
@@ -127,6 +142,16 @@ export function SiteHeader() {
                 href={item.href}
                 onClick={() => setOpen(false)}
                 className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-ink-3 hover:text-gold"
+              >
+                {item.label}
+              </a>
+            ))}
+            {TOOL_LINKS.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground/70 transition-colors hover:bg-ink-3 hover:text-gold"
               >
                 {item.label}
               </a>

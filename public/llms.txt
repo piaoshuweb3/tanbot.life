@@ -64,6 +64,8 @@
 - [首页](https://tanbot.life/) — 致所有街头奋斗者的宣言
 - [关于我](https://tanbot.life/about) — 飘叔三十年完整宣言全文
 - [NFT 节点](https://tanbot.life/nft) — 限量 10000 枚的数字经营契约与身份勋章（创世节点/铸造进度/节点档案馆/转让指南）
+- [爆品雷达](https://tanbot.life/trend) — AI 选品系统：品类/场景/投资筛选 + 毛利率/选址模型/成本测算/认证供应商
+- [餐车矩阵](https://tanbot.life/cart) — 六大品牌餐车系列：规格参数/交互预览/本地制造商报价/关联爆品
 - [城市合伙人](https://tanbot.life/partner) — A/B/C 三级合伙人体系：权益对比、利润分配、已覆盖城市、在线申请
 - [白皮书](https://tanbot.life/whitepaper) — 《城市合伙人及 NFT 确权白皮书 V2.0》核心招商文件全文
 - [AI 智能巡店官](https://tanbot.life/inspect) — 在线体验 AI 出品照片视觉分析
