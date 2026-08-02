@@ -10,6 +10,7 @@ import { AISystemSection } from "@/components/sections/ai-system-section";
 import { PackageSection } from "@/components/sections/package-section";
 import { BrandAssetSection } from "@/components/sections/brand-asset-section";
 import { CopywallSection } from "@/components/sections/copywall-section";
+import { LoveLetterSection } from "@/components/sections/love-letter-section";
 import { BrandMatrixSection } from "@/components/sections/brand-matrix-section";
 import { RecruitSection } from "@/components/sections/recruit-section";
 import { CaseSection } from "@/components/sections/case-section";
@@ -32,6 +33,7 @@ export default function Home() {
         <PackageSection />
         <BrandAssetSection />
         <CopywallSection />
+        <LoveLetterSection />
         <BrandMatrixSection />
         <CaseSection />
         <FaqSection />

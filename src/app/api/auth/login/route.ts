@@ -1,8 +1,9 @@
 export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
-import { managerDb, sessionDb, revenueDb, inspectionDb } from "@/lib/queries";
+import { managerDb, sessionDb } from "@/lib/queries";
 import { hashPassword, verifyPassword, generateToken, SESSION_COOKIE, SESSION_MAX_AGE } from "@/lib/queries";
+import type { Manager } from "@/lib/db";
 
 // ===== 主理人登录 =====
 // 测试账号：piaoshu / admin23
@@ -13,7 +14,7 @@ export async function POST(req: Request) {
     const method = String(body?.method ?? "username");
     const password = String(body?.password ?? "");
 
-    let manager = null;
+    let manager: Manager | null = null;
 
     if (method === "username") {
       const username = String(body?.username ?? "").trim().toLowerCase();

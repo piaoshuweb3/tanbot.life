@@ -580,3 +580,21 @@ Stage Summary:
 - 城市合伙人ABC三级体系 + NFT确权完整落地为可交互页面
 - 白皮书作为核心招商文件全文上线
 - 待办(下阶段): 爆品雷达/餐车矩阵页面、申请表单接后端、真实节点数据接入
+
+---
+Task ID: 26
+Agent: orchestrator (main)
+Task: 网站左上角加入品牌 logo + 全套图标替换 + GitHub 同步
+
+Work Log:
+- 处理用户提供的 logo 源文件（1664x928, 宣米白底）：用 sharp 按角落参考色(#F5F0E8)做背景透明化(阈值42+羽化18)，裁剪内容区(1420x928)并优化至 640px 宽(391KB, 原 2MB)
+- logo 实为深色(#050808)底+金色元素的横版标识，与深炭黑 header 完美融合
+- site-header.tsx：左上角 Flame 图标替换为 <img src="/images/logo.png">（h-9/md:h-10 圆角描边），保留「烟火节点 TANBOT.LIFE」文字
+- 全套图标替换外部占位图（原为 ChatGLM 官方 logo.svg）：logo-icon-512.png / apple-touch-icon.png(180) / logo-icon-64.png；layout.tsx + site.webmanifest 更新
+- .gitignore 新增 .cowork-temp/
+- lint 0 error；验证：home 200、logo.png 200(391KB)、icon 200、webmanifest 200、浏览器实测 logo 60x40 加载正常
+- GitHub: commit 1e1e7f3 push 成功（含上一任务 328661d 一并同步），token 未写入 remote/config；本机 .git-credentials 残留旧 token，建议清理
+Stage Summary:
+- 品牌 logo 全站上线（导航左上角 + favicon + apple-touch + PWA 图标）
+- 移除所有 ChatGLM 外部占位图标
+- 已同步 GitHub main（1e1e7f3）
